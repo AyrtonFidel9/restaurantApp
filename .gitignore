@@ -31,3 +31,20 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Folder view configuration files
+.DSStore
+Desktop.ini
+
+# Thumbnail cache files
+.*
+Thumbs.db
+
+# Files that might appear on external disks
+.Spotlight-V100
+.Trashes
+
+# Application specific files
+venv
+node_modules
+.sass-cache
