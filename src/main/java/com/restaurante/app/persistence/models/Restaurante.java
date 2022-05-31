@@ -8,7 +8,7 @@ public class Restaurante {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "Restaurante", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
     private Set<Mesas> mesas;
     @Column(name="nombre", length=100, nullable=false)
     private String nombre;
