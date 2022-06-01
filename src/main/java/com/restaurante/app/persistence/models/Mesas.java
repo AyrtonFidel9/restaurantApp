@@ -3,7 +3,7 @@ package com.restaurante.app.persistence.models;
 import javax.persistence.*;
 import java.util.Set;
 
-enum Tipo{
+enum TipoMesas{
     individual,
     pareja,
     familiar
@@ -24,7 +24,7 @@ public class Mesas {
     private boolean estado;
 
     @Enumerated(EnumType.STRING)
-    private Tipo tipo;
+    private TipoMesas tipo;
 
     @ManyToMany(mappedBy = "mesas")
     private Set<Reserva> reservas;

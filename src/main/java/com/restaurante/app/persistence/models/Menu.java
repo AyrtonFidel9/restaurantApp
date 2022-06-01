@@ -2,7 +2,7 @@ package com.restaurante.app.persistence.models;
 
 import javax.persistence.*;
 
-enum Tipo {
+enum TipoMenu {
     bebidas,
     postres,
     primeros,
@@ -24,5 +24,5 @@ public class Menu {
     private String nombre;
 
     @Enumerated(EnumType.STRING)
-    private Tipo tipo;
+    private TipoMenu tipo;
 }
