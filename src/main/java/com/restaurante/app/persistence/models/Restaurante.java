@@ -7,9 +7,6 @@ public class Restaurante {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
-
-    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
-    private Set<Mesas> mesas;
     @Column(name="nombre", length=100, nullable=false)
     private String nombre;
 
@@ -17,6 +14,23 @@ public class Restaurante {
     private int cantMesas;
     private String propietario;
 
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private Set<Mesas> mesas;
+
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private Set<Usuario> usuarios;
+
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private Set<Reserva> reservas;
+
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private Set<Menu> menus;
+
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private Set<Ventas> ventas;
+
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private Set<Pedido> pedidos;
 
 
     public int getId() {
