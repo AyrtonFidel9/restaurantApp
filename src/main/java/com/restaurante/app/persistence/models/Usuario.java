@@ -35,4 +35,11 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private Set<Reserva> reservas;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private Set<Ventas> ventas;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private Set<Pedido> pedidos;
+
 }

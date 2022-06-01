@@ -26,6 +26,12 @@ public class Restaurante {
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
     private Set<Menu> menus;
 
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private Set<Ventas> ventas;
+
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private Set<Pedido> pedidos;
+
 
     public int getId() {
         return id;

@@ -28,4 +28,7 @@ public class Mesas {
 
     @ManyToMany(mappedBy = "mesas")
     private Set<Reserva> reservas;
+
+    @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL)
+    private Pedido pedido;
 }

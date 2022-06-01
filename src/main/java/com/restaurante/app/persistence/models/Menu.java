@@ -1,6 +1,7 @@
 package com.restaurante.app.persistence.models;
 
 import javax.persistence.*;
+import java.util.Set;
 
 enum TipoMenu {
     bebidas,
@@ -25,4 +26,9 @@ public class Menu {
 
     @Enumerated(EnumType.STRING)
     private TipoMenu tipo;
+
+    @OneToMany(mappedBy = "menu",cascade = CascadeType.ALL)
+    private Set<Alimentos> alimentos;
+
+
 }
