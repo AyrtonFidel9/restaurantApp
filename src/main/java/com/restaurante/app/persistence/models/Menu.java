@@ -1,31 +1,28 @@
 package com.restaurante.app.persistence.models;
 
 import javax.persistence.*;
-import java.util.Set;
 
-enum Tipo{
-    individual,
-    pareja,
-    familiar
+enum Tipo {
+    bebidas,
+    postres,
+    primeros,
+    segundos,
+    ensaladas,
+    sopas
 }
 
 @Entity
-public class Mesas {
+public class Menu {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
     private Restaurante restaurante;
 
-    private int capacidad;
-
-    private boolean estado;
+    private String nombre;
 
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
-
-    @ManyToMany(mappedBy = "mesas")
-    private Set<Reserva> reservas;
 }
