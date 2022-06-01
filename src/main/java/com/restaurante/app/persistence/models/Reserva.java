@@ -23,11 +23,6 @@ public class Reserva {
 
     private Time hora;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "ReservasMesas",
-            joinColumns = @JoinColumn(name = "idReserva"),
-            inverseJoinColumns = @JoinColumn(name = "idMesa")
-    )
-    private Set<Mesas> mesas;
+    @OneToMany(mappedBy = "reserva")
+    private Set<ReservaMesa> reservaMesas;
 }

@@ -31,4 +31,7 @@ public class Mesas {
 
     @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL)
     private Pedido pedido;
+
+    @OneToMany(mappedBy = "mesas")
+    private Set<ReservaMesa> reservaMesas;
 }
