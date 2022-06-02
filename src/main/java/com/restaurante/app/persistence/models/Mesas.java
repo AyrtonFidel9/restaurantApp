@@ -26,9 +26,6 @@ public class Mesas {
     @Enumerated(EnumType.STRING)
     private TipoMesas tipo;
 
-    @ManyToMany(mappedBy = "mesas")
-    private Set<Reserva> reservas;
-
     @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL)
     private Pedido pedido;
 
