@@ -4,6 +4,12 @@ package com.restaurante.app.persistence.models;
 import javax.persistence.*;
 import java.util.Set;
 
+enum EstadoPedido{
+    pendiente,
+    anulado,
+    entregado
+}
+
 @Entity
 public class Pedido {
     @Id
@@ -28,6 +34,7 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido")
     private Set<detallePedido> detallePedidos;
 
-
+    @Enumerated(EnumType.STRING)
+    private EstadoPedido estadoPedido;
 
 }
