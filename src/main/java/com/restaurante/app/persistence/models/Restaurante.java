@@ -3,6 +3,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "Restaurantes")
 public class Restaurante {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -15,7 +16,7 @@ public class Restaurante {
     private String propietario;
 
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
-    private Set<Mesas> mesas;
+    private Set<Mesa> mesas;
 
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
     private Set<Usuario> usuarios;
@@ -27,11 +28,10 @@ public class Restaurante {
     private Set<Menu> menus;
 
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
-    private Set<Ventas> ventas;
+    private Set<Venta> ventas;
 
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
     private Set<Pedido> pedidos;
-
 
     public int getId() {
         return id;
@@ -63,5 +63,53 @@ public class Restaurante {
 
     public void setPropietario(String propietario) {
         this.propietario = propietario;
+    }
+
+    public Set<Mesa> getMesas() {
+        return mesas;
+    }
+
+    public void setMesas(Set<Mesa> mesas) {
+        this.mesas = mesas;
+    }
+
+    public Set<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(Set<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public Set<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(Set<Reserva> reservas) {
+        this.reservas = reservas;
+    }
+
+    public Set<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(Set<Menu> menus) {
+        this.menus = menus;
+    }
+
+    public Set<Venta> getVentas() {
+        return ventas;
+    }
+
+    public void setVentas(Set<Venta> ventas) {
+        this.ventas = ventas;
+    }
+
+    public Set<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(Set<Pedido> pedidos) {
+        this.pedidos = pedidos;
     }
 }
