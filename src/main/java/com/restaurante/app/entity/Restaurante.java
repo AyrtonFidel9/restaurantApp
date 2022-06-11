@@ -1,4 +1,4 @@
-package com.restaurante.app.persistence.models;
+package com.restaurante.app.entity;
 import java.util.Set;
 import javax.persistence.*;
 

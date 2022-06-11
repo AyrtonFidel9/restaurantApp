@@ -1,4 +1,4 @@
-package com.restaurante.app.persistence.models;
+package com.restaurante.app.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
