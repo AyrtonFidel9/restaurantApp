@@ -1,38 +1,26 @@
-package com.restaurante.app.entity;
+package com.restaurante.app.dto;
 
-import javax.persistence.*;
+import com.restaurante.app.entity.ReservaMesa;
+import com.restaurante.app.entity.Pedido;
+import com.restaurante.app.entity.Restaurante;
+import com.restaurante.app.entity.TipoMesas;
+
 import java.util.Set;
 
-@Entity
-@Table(name = "Mesas")
-public class Mesa {
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="idRestaurante", referencedColumnName = "id")
+public class MesaDTO {
+    private int idMesa;
     private Restaurante restaurante;
-
     private int capacidad;
-
-    private boolean estado;
-
-    @Enumerated(EnumType.STRING)
-    private TipoMesas tipo;
-
-    @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL)
+    private com.restaurante.app.entity.TipoMesas tipo;
     private Pedido pedido;
-
-    @OneToMany(mappedBy = "mesas")
     private Set<ReservaMesa> reservaMesas;
 
-    public int getId() {
-        return id;
+    public int getIdMesa() {
+        return idMesa;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdMesa(int idMesa) {
+        this.idMesa = idMesa;
     }
 
     public Restaurante getRestaurante() {
@@ -49,14 +37,6 @@ public class Mesa {
 
     public void setCapacidad(int capacidad) {
         this.capacidad = capacidad;
-    }
-
-    public boolean isEstado() {
-        return estado;
-    }
-
-    public void setEstado(boolean estado) {
-        this.estado = estado;
     }
 
     public TipoMesas getTipo() {
