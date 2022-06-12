@@ -1,0 +1,16 @@
+package com.restaurante.app.repository.services;
+
+import com.restaurante.app.dto.MesaDTO;
+import java.util.List;
+
+public interface iMesaService{
+    MesaDTO ingresarMesa(MesaDTO mesaDTO);
+    void eliminarMesa(int idMesa);
+
+    MesaDTO buscarMesa(int idMesa);
+
+    List<MesaDTO> obtenerMesas();
+
+    MesaDTO cambiarEstado(int idMesa, boolean estado);
+
+}
