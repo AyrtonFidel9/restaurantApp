@@ -2,14 +2,19 @@ package com.restaurante.app.services;
 
 import com.restaurante.app.dto.ReservaDTO;
 import com.restaurante.app.entity.Reserva;
+import com.restaurante.app.entity.ReservaMesa;
 import com.restaurante.app.entity.Restaurante;
 import com.restaurante.app.repository.iReservaRepository;
 import com.restaurante.app.mapper.iReservaMapper;
 import com.restaurante.app.repository.iRestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.restaurante.app.entity.Mesa;
+import com.restaurante.app.mapper.iMesaMapper;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservaService implements iReservaService{
@@ -20,7 +25,13 @@ public class ReservaService implements iReservaService{
     private iRestauranteRepository restauranteRepository;
 
     @Autowired
+    private MesaService mesaService;
+
+    @Autowired
     private iReservaMapper mapper;
+
+    @Autowired
+    private iMesaMapper mesaMapper;
 
     @Override
     public ReservaDTO ingresarReserva(ReservaDTO reservaDTO) {
@@ -39,6 +50,25 @@ public class ReservaService implements iReservaService{
         reserva.setRestaurante(res);
 
         //buscar y guardar el objeto usuario
+
+        //Ingresar las mesas que forman parte de la reserva
+        Set<ReservaMesa> listReservaMesa = reservaDTO
+                .getReservaMesas()
+                .stream()
+                .map(reservaMesa -> {
+                    Mesa mesa =  mesaMapper.toMesa(
+                            mesaService
+                                    .buscarMesa(mesaMapper.toMesaDTO(
+                                         reservaMesa.getMesas()
+                    ).getIdMesa()));
+
+                    ReservaMesa reserva_mesa = new ReservaMesa();
+                    reserva_mesa.setMesas(mesa);
+                    reserva_mesa.setReserva(reservaMesa.getReserva());
+
+                    return reserva_mesa;
+                }).collect(Collectors.toSet());
+        reserva.setReservaMesas(listReservaMesa);
 
         Reserva ingReserva = reservaRepository.save(reserva);
         return mapper.toReservaDTO(ingReserva);
