@@ -1,12 +1,15 @@
 package com.restaurante.app.entity;
 
 
+import org.springframework.data.annotation.Id;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "DetallesPedidos")
 public class detallePedido {
+    @Id
     @EmbeddedId
     detallePedidoKey id;
 

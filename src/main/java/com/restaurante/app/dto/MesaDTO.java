@@ -1,19 +1,13 @@
 package com.restaurante.app.dto;
-
-import com.restaurante.app.entity.ReservaMesa;
-import com.restaurante.app.entity.Pedido;
-import com.restaurante.app.entity.Restaurante;
 import com.restaurante.app.entity.TipoMesas;
 
-import java.util.Set;
 
 public class MesaDTO {
     private int idMesa;
-    private Restaurante restaurante;
+    private int idRestaurante;
     private int capacidad;
     private com.restaurante.app.entity.TipoMesas tipo;
-    private Pedido pedido;
-    private Set<ReservaMesa> reservaMesas;
+    private boolean estado;
 
     public int getIdMesa() {
         return idMesa;
@@ -23,12 +17,12 @@ public class MesaDTO {
         this.idMesa = idMesa;
     }
 
-    public Restaurante getRestaurante() {
-        return restaurante;
+    public int getIdRestaurante() {
+        return idRestaurante;
     }
 
-    public void setRestaurante(Restaurante restaurante) {
-        this.restaurante = restaurante;
+    public void setIdRestaurante(int idRestaurante) {
+        this.idRestaurante = idRestaurante;
     }
 
     public int getCapacidad() {
@@ -47,19 +41,11 @@ public class MesaDTO {
         this.tipo = tipo;
     }
 
-    public Pedido getPedido() {
-        return pedido;
+    public boolean isEstado() {
+        return estado;
     }
 
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
-
-    public Set<ReservaMesa> getReservaMesas() {
-        return reservaMesas;
-    }
-
-    public void setReservaMesas(Set<ReservaMesa> reservaMesas) {
-        this.reservaMesas = reservaMesas;
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 }

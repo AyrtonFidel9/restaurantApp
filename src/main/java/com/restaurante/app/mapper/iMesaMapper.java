@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import com.restaurante.app.entity.Mesa;
 import com.restaurante.app.dto.MesaDTO;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -13,14 +12,13 @@ import java.util.List;
 public interface iMesaMapper {
     @Mappings({
             @Mapping(source = "id", target = "idMesa"),
-            @Mapping(source = "restaurante", target = "restaurante"),
+            @Mapping(source = "restaurante.id", target = "idRestaurante"),
             @Mapping(source = "capacidad", target = "capacidad"),
             @Mapping(source = "estado", target = "estado"),
-            @Mapping(source = "tipo", target = "tipo"),
-            @Mapping(source = "pedido", target = "pedido"),
-            @Mapping(source = "reservaMesas", target = "reservaMesas")
+            @Mapping(source = "tipo", target = "tipo")
     })
     MesaDTO toMesaDTO (Mesa mesa);
+    List<MesaDTO> toMesasDTO(List<Mesa> mesas);
 
     @InheritInverseConfiguration
     Mesa toMesa (MesaDTO mesa);

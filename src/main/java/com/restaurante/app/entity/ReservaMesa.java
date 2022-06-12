@@ -1,10 +1,13 @@
 package com.restaurante.app.entity;
 
+import org.springframework.data.annotation.Id;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ReservasMesas")
 public class ReservaMesa {
+
     @EmbeddedId
     ReservaMesaKey id;
 
