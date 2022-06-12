@@ -16,7 +16,7 @@ public interface iMesaMapper {
             @Mapping(source = "capacidad", target = "capacidad"),
             @Mapping(source = "estado", target = "estado"),
             @Mapping(source = "tipo", target = "tipo"),
-            @Mapping(source = "nombre", target = "nombre"),
+            @Mapping(source = "nombre", target = "nombre")
     })
     MesaDTO toMesaDTO (Mesa mesa);
     List<MesaDTO> toMesasDTO(List<Mesa> mesas);

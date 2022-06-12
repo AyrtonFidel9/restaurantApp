@@ -16,7 +16,8 @@ public interface iReservaMapper {
             @Mapping(source = "fecha", target = "fecha"),
             @Mapping(source = "hora", target = "hora"),
             @Mapping(source = "restaurante.id", target = "idRestaurante"),
-            @Mapping(source = "usuario.id", target = "idUsuario")
+            @Mapping(source = "usuario.id", target = "idUsuario"),
+            @Mapping(source = "reservaMesas", target = "reservaMesas")
     })
     ReservaDTO toReservaDTO (Reserva reserva);
     List<ReservaDTO> toReservasDTO (List<Reserva> reservas);

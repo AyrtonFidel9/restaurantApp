@@ -1,7 +1,10 @@
 package com.restaurante.app.dto;
 
+import com.restaurante.app.entity.ReservaMesa;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Set;
 
 public class ReservaDTO{
     private int idReserva;
@@ -9,6 +12,8 @@ public class ReservaDTO{
     private LocalTime hora;
     private int idUsuario;
     private int idRestaurante;
+
+    private Set<ReservaMesa> reservaMesas;
 
     public int getIdReserva() {
         return idReserva;
@@ -48,5 +53,13 @@ public class ReservaDTO{
 
     public void setIdRestaurante(int idRestaurante) {
         this.idRestaurante = idRestaurante;
+    }
+
+    public Set<ReservaMesa> getReservaMesas() {
+        return reservaMesas;
+    }
+
+    public void setReservaMesas(Set<ReservaMesa> reservaMesas) {
+        this.reservaMesas = reservaMesas;
     }
 }
