@@ -1,7 +1,7 @@
 package com.restaurante.app.controller;
 
 import com.restaurante.app.dto.MesaDTO;
-import com.restaurante.app.repository.services.MesaService;
+import com.restaurante.app.services.MesaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

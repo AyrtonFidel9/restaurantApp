@@ -1,4 +1,4 @@
-package com.restaurante.app.repository.services;
+package com.restaurante.app.services;
 
 import com.restaurante.app.dto.UsuarioDTO;
 import com.restaurante.app.entity.Restaurante;
