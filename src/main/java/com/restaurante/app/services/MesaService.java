@@ -31,23 +31,18 @@ public class MesaService implements iMesaService{
         mesaDTO.setIdRestaurante(1);
         int idRes = mesaDTO.getIdRestaurante();
         Mesa mesa = mapper.toMesa(mesaDTO);
-
-        //Determinar el tipo de mesa
-        int asientos = mesa.getCapacidad();
-        if (asientos == 1){
-            mesa.setTipo(TipoMesas.individual);
-        }
-        else if(asientos == 2){
-            mesa.setTipo(TipoMesas.pareja);
-        }
-        else if(asientos >= 3){
-            mesa.setTipo(TipoMesas.familiar);
-        }
+        //ingresar el nombre de la mesa
+        mesa.setNombre(mesaDTO.getNombre());
+        //Settear el tipo de mesa
+        mesa.setTipo(getMesaType(mesa.getCapacidad()));
         //settear la disponibilidad
         mesa.setEstado(false);
 
         //buscar y guardar el objeto restaurante
-        Restaurante res = restauranteRepository.findById(idRes).orElseThrow(()->new RuntimeException("Restaurante no encontrado"));
+        Restaurante res = restauranteRepository
+                .findById(idRes)
+                .orElseThrow(()->
+                        new RuntimeException("Restaurante no encontrado"));
         mesa.setRestaurante(res);
 
         Mesa ingMesa = mesaRepository.save(mesa);
@@ -58,6 +53,7 @@ public class MesaService implements iMesaService{
     * Por validar
     *  Validar que la cantidad de mesas no sea superior a la capacidad del restaurante
     *  Validar que la cantidad no sea 0
+    *  Validar que la el nombre UNIQUE no se repita con un mensaje o excepcion
     * */
 
     @Override
@@ -68,19 +64,70 @@ public class MesaService implements iMesaService{
     @Override
     public MesaDTO buscarMesa(int idMesa) {
         Optional<Mesa> mesaResult = mesaRepository.findById(idMesa);
-        return mapper.toMesaDTO(mesaResult.orElseThrow(()-> new RuntimeException("Mesa no encontrada")));
+        return mapper.toMesaDTO(mesaResult
+                .orElseThrow(()->
+                        new RuntimeException("Mesa no encontrada")));
     }
 
     @Override
     public List<MesaDTO> obtenerMesas() {
+
         return mapper.toMesasDTO((List<Mesa>)mesaRepository.findAll());
     }
 
     @Override
     public MesaDTO cambiarEstado(int idMesa, boolean estado) {
-        MesaDTO mesa = buscarMesa(idMesa);
+        MesaDTO mesaDTO = buscarMesa(idMesa);
+        Mesa mesa = mapper.toMesa(mesaDTO);
         mesa.setEstado(estado);
-        mesaRepository.save(mapper.toMesa(mesa));
-        return mesa;
+        mesa.setRestaurante(restauranteRepository
+                .findById(mesaDTO.getIdRestaurante())
+                .orElseThrow(()->
+                        new RuntimeException("Restaurante no encontrado")));
+        mesaRepository.save(mesa);
+        return mapper.toMesaDTO(mesa);
+    }
+
+    @Override
+    public MesaDTO actualizarMesa(int idMesa, MesaDTO mesaDTO) {
+
+        mesaDTO.setIdRestaurante(1);
+        Mesa mesa = mapper.toMesa(buscarMesa(idMesa));
+
+        mesa.setNombre(mesaDTO.getNombre());
+
+        mesa.setTipo(
+                getMesaType(mesaDTO.getCapacidad())
+        );
+
+        mesa.setRestaurante(restauranteRepository
+                .findById(mesaDTO.getIdRestaurante())
+                .orElseThrow(()->
+                        new RuntimeException("Restaurante no encontrado")));
+
+        mesa.setEstado(mesaDTO.isEstado());
+
+        mesa.setCapacidad(mesaDTO.getCapacidad());
+
+        mesaRepository.save(mesa);
+
+        return mapper.toMesaDTO(mesa);
+    }
+
+    // Funcion para determinar el tipo de mesa
+    @Override
+    public TipoMesas getMesaType(int numAsientos) {
+        if (numAsientos == 1){
+            return TipoMesas.individual;
+        }
+        else
+            if(numAsientos == 2){
+                return TipoMesas.pareja;
+        }
+        else
+            if(numAsientos >= 3){
+                return TipoMesas.familiar;
+        }
+        return null;
     }
 }

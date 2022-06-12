@@ -32,6 +32,26 @@ public class MesaController {
     public ResponseEntity<String> deleteMesa(@PathVariable(name = "id") int id) {
         MesaDTO mesa = mesaService.buscarMesa(id);
         mesaService.eliminarMesa(id);
-        return new ResponseEntity<>("Mesa de tipo: "+mesa.getTipo()+" con ID: "+id+" eliminada con exito", HttpStatus.OK);
+        return new ResponseEntity<>("Mesa "+mesa.getNombre()+
+                " de tipo: "+mesa.getTipo()+" con ID: "+id+
+                " eliminada con exito", HttpStatus.OK);
+    }
+
+    /*Implementar el editar global y del estado*/
+
+    //Editar global
+    @PutMapping("/{id}")
+    public ResponseEntity<MesaDTO> actualizarMesa (@PathVariable(name = "id") int id,
+                                                   @RequestBody MesaDTO mesaDTO){
+        MesaDTO mesaDTOresp = mesaService.actualizarMesa(id, mesaDTO);
+        return new ResponseEntity<>(mesaDTOresp,HttpStatus.OK);
+    }
+
+    //Editar el estado de la mesa
+    @PutMapping("/updateStatusTable")
+    public ResponseEntity<MesaDTO> actualizarEstadoMesa (@RequestParam int id,
+                                                         @RequestParam boolean status){
+        MesaDTO mesaDTOresp = mesaService.cambiarEstado(id,status);
+        return new ResponseEntity<>(mesaDTOresp,HttpStatus.OK);
     }
 }

@@ -9,7 +9,8 @@ public class Mesa {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
-
+    @Column(unique = true)
+    private String nombre;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
     private Restaurante restaurante;
@@ -81,5 +82,27 @@ public class Mesa {
 
     public void setReservaMesas(Set<ReservaMesa> reservaMesas) {
         this.reservaMesas = reservaMesas;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return "Mesa{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", restaurante=" + restaurante +
+                ", capacidad=" + capacidad +
+                ", estado=" + estado +
+                ", tipo=" + tipo +
+                ", pedido=" + pedido +
+                ", reservaMesas=" + reservaMesas +
+                '}';
     }
 }
