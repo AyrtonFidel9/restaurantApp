@@ -3,13 +3,6 @@ package com.restaurante.app.entity;
 import javax.persistence.*;
 import java.util.Set;
 
-enum Rol {
-    mesero,
-    cliente,
-    administrador,
-    cocinero,
-    cajero
-}
 @Entity
 @Table(name = "Usuarios")
 public class Usuario {
