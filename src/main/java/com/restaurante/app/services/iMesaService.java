@@ -1,6 +1,8 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.MesaDTO;
+import com.restaurante.app.entity.TipoMesas;
+
 import java.util.List;
 
 public interface iMesaService{
@@ -13,4 +15,7 @@ public interface iMesaService{
 
     MesaDTO cambiarEstado(int idMesa, boolean estado);
 
+    MesaDTO actualizarMesa(int idMesa, MesaDTO mesaDTO);
+
+    TipoMesas getMesaType(int numAsientos);
 }

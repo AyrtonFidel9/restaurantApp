@@ -9,6 +9,16 @@ public class MesaDTO {
     private com.restaurante.app.entity.TipoMesas tipo;
     private boolean estado;
 
+    private String nombre;
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public int getIdMesa() {
         return idMesa;
     }
