@@ -34,4 +34,6 @@ public class MesaController {
         mesaService.eliminarMesa(id);
         return new ResponseEntity<>("Mesa de tipo: "+mesa.getTipo()+" con ID: "+id+" eliminada con exito", HttpStatus.OK);
     }
+
+    /*Implementar el editar global y del estado*/
 }
