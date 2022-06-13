@@ -26,8 +26,8 @@ public class UsuarioService implements iUsuarioService{
     @Override
     public UsuarioDTO ingresarUsuario(UsuarioDTO usuarioDTO)
     {
-        UsuarioDTO.setIdRestaurante(1);
-        int idRes = UsuarioDTO.getIdRestaurante();
+        usuarioDTO.setIdRestaurante(1);
+        int idRes = usuarioDTO.getIdRestaurante();
         Usuario usuario = mapper.toUsuario(usuarioDTO);
 
         Restaurante res = restauranteRepository.findById(idRes).orElseThrow(()->new RuntimeException("Restaurante no encontrado"));

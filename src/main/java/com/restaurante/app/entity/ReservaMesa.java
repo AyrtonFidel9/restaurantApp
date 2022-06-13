@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class ReservaMesa {
 
     @EmbeddedId
-    ReservaMesaKey id;
+    ReservaMesaKey id = new ReservaMesaKey();
 
     @ManyToOne
     @MapsId("idReserva")

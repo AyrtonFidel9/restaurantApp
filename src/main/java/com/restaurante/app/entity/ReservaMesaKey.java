@@ -12,6 +12,13 @@ public class ReservaMesaKey implements Serializable {
     @Column(name = "idMesa")
     private int idMesa;
 
+    public ReservaMesaKey(){}
+
+    public ReservaMesaKey(int idReserva, int idMesa) {
+        this.idReserva = idReserva;
+        this.idMesa = idMesa;
+    }
+
     public int getIdReserva() {
         return idReserva;
     }

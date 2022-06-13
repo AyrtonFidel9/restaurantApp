@@ -23,13 +23,13 @@ public class UsuarioController {
     @GetMapping
     public List<UsuarioDTO> getUsuario(){return usuarioService.obtenerUsuario();}
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable(name = "id") int id)
     {
         return ResponseEntity.ok(usuarioService.buscarUsuario(id));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
 
     public ResponseEntity<String> deleteUsuario(@PathVariable(name = "id") int id){
         UsuarioDTO usuario = usuarioService.buscarUsuario(id);

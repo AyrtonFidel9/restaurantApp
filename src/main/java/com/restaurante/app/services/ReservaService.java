@@ -1,17 +1,18 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.ReservaDTO;
-import com.restaurante.app.entity.Reserva;
-import com.restaurante.app.entity.ReservaMesa;
-import com.restaurante.app.entity.Restaurante;
+import com.restaurante.app.entity.*;
 import com.restaurante.app.repository.iReservaRepository;
 import com.restaurante.app.mapper.iReservaMapper;
 import com.restaurante.app.repository.iRestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.restaurante.app.entity.Mesa;
 import com.restaurante.app.mapper.iMesaMapper;
+import com.restaurante.app.mapper.iUsuarioMapper;
+import com.restaurante.app.repository.iUsuarioRepository;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,13 +26,21 @@ public class ReservaService implements iReservaService{
     private iRestauranteRepository restauranteRepository;
 
     @Autowired
+    private iUsuarioRepository usuarioRepository;
+
+    @Autowired
     private MesaService mesaService;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Autowired
     private iReservaMapper mapper;
 
     @Autowired
     private iMesaMapper mesaMapper;
+    @Autowired
+    private iUsuarioMapper usuarioMapper;
 
     @Override
     public ReservaDTO ingresarReserva(ReservaDTO reservaDTO) {
@@ -40,7 +49,7 @@ public class ReservaService implements iReservaService{
         //capturar el id del restaurante
         int idRest = reservaDTO.getIdRestaurante();
         //capturar el id del usuario
-        int idUsu = 1;
+        int idUsu = reservaDTO.getIdUsuario();
 
         Reserva reserva = mapper.toReserva(reservaDTO);
 
@@ -50,17 +59,24 @@ public class ReservaService implements iReservaService{
         reserva.setRestaurante(res);
 
         //buscar y guardar el objeto usuario
+        //1era forma
+        Usuario usuarioRes = usuarioRepository.findById(idUsu)
+                .orElseThrow(()->new RuntimeException("Usuario no encontrado"));
+        //2da forma
+        /*Usuario usuarioRes = usuarioMapper
+                .toUsuario(usuarioService.buscarUsuario(idUsu));*/
+        reserva.setUsuario(usuarioRes);
 
         //Ingresar las mesas que forman parte de la reserva
-        Set<ReservaMesa> listReservaMesa = reservaDTO
+        Set<ReservaMesa> listReservaMesa = Collections.EMPTY_SET;
+        listReservaMesa = reservaDTO
                 .getReservaMesas()
                 .stream()
                 .map(reservaMesa -> {
+                    System.out.println(reservaMesa.getId().getIdMesa());
                     Mesa mesa =  mesaMapper.toMesa(
                             mesaService
-                                    .buscarMesa(mesaMapper.toMesaDTO(
-                                         reservaMesa.getMesas()
-                    ).getIdMesa()));
+                                    .buscarMesa(reservaMesa.getId().getIdMesa()));
 
                     ReservaMesa reserva_mesa = new ReservaMesa();
                     reserva_mesa.setMesas(mesa);

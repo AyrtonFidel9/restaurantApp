@@ -2,11 +2,16 @@ package com.restaurante.app.mapper;
 
 import com.restaurante.app.dto.UsuarioDTO;
 import com.restaurante.app.entity.Usuario;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.InheritInverseConfiguration;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+/*ATENCION CON UNMAPPED TARGET*/
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface iUsuarioMapper {
 
     @Mappings({
@@ -17,7 +22,7 @@ public interface iUsuarioMapper {
             @Mapping(source = "cedula",target= "cedula"),
             @Mapping(source = "email",target= "email"),
             @Mapping(source = "password",target= "password"),
-            @Mapping(source = "rol",target= "rol")
+            @Mapping(source = "rol",target= "rol"),
     })
     UsuarioDTO toUsuarioDTO (Usuario usuario);
     List<UsuarioDTO> toUsuarioDTO (List<Usuario> usuarios);

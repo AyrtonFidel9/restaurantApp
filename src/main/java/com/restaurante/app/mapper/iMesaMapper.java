@@ -5,10 +5,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import com.restaurante.app.entity.Mesa;
 import com.restaurante.app.dto.MesaDTO;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface iMesaMapper {
     @Mappings({
             @Mapping(source = "id", target = "idMesa"),
