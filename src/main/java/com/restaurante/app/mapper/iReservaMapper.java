@@ -1,15 +1,16 @@
 package com.restaurante.app.mapper;
 
 import com.restaurante.app.entity.Reserva;
-import com.restaurante.app.dto.ReservaDTO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import com.restaurante.app.dto.ReservaDTO;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses={iReservaMesaMapper.class,
+        iMesaMapper.class, iReservaMapper.class})
 public interface iReservaMapper {
     @Mappings({
             @Mapping(source = "id",target = "idReserva"),

@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import com.restaurante.app.mapper.iMesaMapper;
 import com.restaurante.app.mapper.iUsuarioMapper;
 import com.restaurante.app.repository.iUsuarioRepository;
+import com.restaurante.app.repository.iReservaMesaRepository;
+import com.restaurante.app.repository.iMesaRepository;
+
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,7 +31,10 @@ public class ReservaService implements iReservaService{
     private iUsuarioRepository usuarioRepository;
 
     @Autowired
-    private MesaService mesaService;
+    private iReservaMesaRepository reservaMesaRepository;
+
+    @Autowired
+    private iMesaRepository mesaRepository;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -55,16 +60,14 @@ public class ReservaService implements iReservaService{
 
         //buscar y guardar el objeto restaurante
         Restaurante res = restauranteRepository.findById(idRest)
-                .orElseThrow(()->new RuntimeException("Restaurante no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Restaurante no encontrado"));
+
         reserva.setRestaurante(res);
 
         //buscar y guardar el objeto usuario
-        //1era forma
         Usuario usuarioRes = usuarioRepository.findById(idUsu)
-                .orElseThrow(()->new RuntimeException("Usuario no encontrado"));
-        //2da forma
-        /*Usuario usuarioRes = usuarioMapper
-                .toUsuario(usuarioService.buscarUsuario(idUsu));*/
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
         reserva.setUsuario(usuarioRes);
 
         //Ingresar las mesas que forman parte de la reserva
@@ -73,21 +76,23 @@ public class ReservaService implements iReservaService{
                 .getReservaMesas()
                 .stream()
                 .map(reservaMesa -> {
-                    System.out.println(reservaMesa.getId().getIdMesa());
-                    Mesa mesa =  mesaMapper.toMesa(
-                            mesaService
-                                    .buscarMesa(reservaMesa.getId().getIdMesa()));
+                    Mesa mesa = mesaRepository.findById(reservaMesa
+                                    .getId().getIdMesa())
+                            .orElseThrow(() -> new RuntimeException("Mesa no encontrada"));
 
-                    ReservaMesa reserva_mesa = new ReservaMesa();
-                    reserva_mesa.setMesas(mesa);
-                    reserva_mesa.setReserva(reservaMesa.getReserva());
-
-                    return reserva_mesa;
+                    System.out.println(mesa.toString());
+                    ReservaMesa reservarMesa = new ReservaMesa();
+                    reservarMesa.setMesas(mesa);
+                    reservarMesa.setReserva(reserva);
+                    return reservarMesa;
                 }).collect(Collectors.toSet());
         reserva.setReservaMesas(listReservaMesa);
 
-        Reserva ingReserva = reservaRepository.save(reserva);
-        return mapper.toReservaDTO(ingReserva);
+
+        reservaRepository.save(reserva);
+        //reservaMesaRepository.saveAll(listReservaMesa);
+
+        return mapper.toReservaDTO(reserva);
     }
 
     @Override

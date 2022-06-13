@@ -1,4 +1,6 @@
 package com.restaurante.app.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Set;
 import javax.persistence.*;
 
@@ -16,6 +18,7 @@ public class Restaurante {
     private String propietario;
 
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Mesa> mesas;
 
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)

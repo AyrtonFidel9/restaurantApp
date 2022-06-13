@@ -1,10 +1,13 @@
 package com.restaurante.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "Mesas")
+@Table(name = "mesas")
 public class Mesa {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -13,6 +16,7 @@ public class Mesa {
     private String nombre;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
+    @JsonIgnore
     private Restaurante restaurante;
 
     private int capacidad;
@@ -25,7 +29,8 @@ public class Mesa {
     @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL)
     private Pedido pedido;
 
-    @OneToMany(mappedBy = "mesas")
+    @OneToMany(mappedBy = "mesas", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<ReservaMesa> reservaMesas;
 
     public int getId() {

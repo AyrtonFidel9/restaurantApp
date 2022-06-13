@@ -1,6 +1,7 @@
 package com.restaurante.app.entity;
 
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -14,7 +15,9 @@ public class ReservaMesa {
     @ManyToOne
     @MapsId("idReserva")
     @JoinColumn(name = "idReserva")
+    @JsonIgnore
     Reserva reserva;
+
 
     @ManyToOne
     @MapsId("idMesa")

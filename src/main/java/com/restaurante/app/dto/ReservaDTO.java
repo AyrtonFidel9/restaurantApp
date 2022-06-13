@@ -13,7 +13,7 @@ public class ReservaDTO{
     private int idUsuario;
     private int idRestaurante;
 
-    private Set<ReservaMesa> reservaMesas;
+    private Set<ReservaMesaDTO> reservaMesas;
 
     public int getIdReserva() {
         return idReserva;
@@ -55,11 +55,11 @@ public class ReservaDTO{
         this.idRestaurante = idRestaurante;
     }
 
-    public Set<ReservaMesa> getReservaMesas() {
+    public Set<ReservaMesaDTO> getReservaMesas() {
         return reservaMesas;
     }
 
-    public void setReservaMesas(Set<ReservaMesa> reservaMesas) {
+    public void setReservaMesas(Set<ReservaMesaDTO> reservaMesas) {
         this.reservaMesas = reservaMesas;
     }
 }

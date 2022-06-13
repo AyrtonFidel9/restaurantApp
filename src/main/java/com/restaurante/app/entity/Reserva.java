@@ -1,5 +1,7 @@
 package com.restaurante.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,6 +27,7 @@ public class Reserva {
     private LocalTime hora;
 
     @OneToMany(mappedBy = "reserva")
+    @JsonIgnore
     private Set<ReservaMesa> reservaMesas;
 
     public int getId() {
