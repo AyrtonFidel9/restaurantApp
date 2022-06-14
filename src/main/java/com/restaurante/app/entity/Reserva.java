@@ -26,7 +26,7 @@ public class Reserva {
 
     private LocalTime hora;
 
-    @OneToMany(mappedBy = "reserva")
+    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<ReservaMesa> reservaMesas;
 

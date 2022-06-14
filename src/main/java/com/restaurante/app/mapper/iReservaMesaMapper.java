@@ -13,7 +13,8 @@ import java.util.List;
 public interface iReservaMesaMapper {
     @Mappings({
             @Mapping(source = "mesas.id", target = "id.idMesa"),
-            @Mapping(source = "reserva.id", target = "id.idReserva")
+            @Mapping(source = "reserva.id", target = "id.idReserva"),
+            @Mapping(source = "mesas", target = "mesa")
     })
     ReservaMesaDTO toReservaMesaDTO (ReservaMesa reservaMesa);
     List<ReservaMesaDTO> toReservasMesasDTO (List<ReservaMesa> reservaMesaList);
