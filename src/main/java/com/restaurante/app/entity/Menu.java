@@ -3,7 +3,7 @@ package com.restaurante.app.entity;
 import javax.persistence.*;
 import java.util.Set;
 
-enum TipoMenu {
+public enum TipoMenu {
     bebidas,
     postres,
     primeros,

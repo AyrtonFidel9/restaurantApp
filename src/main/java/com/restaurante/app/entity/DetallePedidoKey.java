@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Embeddable
-public class detallePedidoKey implements Serializable {
+public class DetallePedidoKey implements Serializable {
 
     @Column(name = "idPedido")
     private int idPedido;

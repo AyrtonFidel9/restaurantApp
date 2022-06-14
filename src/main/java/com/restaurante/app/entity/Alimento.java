@@ -27,7 +27,7 @@ public class Alimento {
     private TipoMenu tipo;
 
     @OneToMany(mappedBy = "alimentos")
-    private Set<detallePedido> detallePedidos;
+    private Set<DetallePedido> DetallePedidos;
 
     public int getId() {
         return id;
@@ -93,11 +93,11 @@ public class Alimento {
         this.tipo = tipo;
     }
 
-    public Set<detallePedido> getDetallePedidos() {
-        return detallePedidos;
+    public Set<DetallePedido> getDetallePedidos() {
+        return DetallePedidos;
     }
 
-    public void setDetallePedidos(Set<detallePedido> detallePedidos) {
-        this.detallePedidos = detallePedidos;
+    public void setDetallePedidos(Set<DetallePedido> DetallePedidos) {
+        this.DetallePedidos = DetallePedidos;
     }
 }
