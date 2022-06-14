@@ -3,15 +3,6 @@ package com.restaurante.app.entity;
 import javax.persistence.*;
 import java.util.Set;
 
-public enum TipoMenu {
-    bebidas,
-    postres,
-    primeros,
-    segundos,
-    ensaladas,
-    sopas
-}
-
 @Entity
 @Table(name = "Menus")
 public class Menu {

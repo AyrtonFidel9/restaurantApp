@@ -4,12 +4,6 @@ package com.restaurante.app.entity;
 import javax.persistence.*;
 import java.util.Set;
 
-public enum EstadoPedido{
-    pendiente,
-    anulado,
-    entregado
-}
-
 @Entity
 @Table(name = "Pedidos")
 public class Pedido {
