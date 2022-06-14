@@ -7,10 +7,7 @@ import com.restaurante.app.mapper.iReservaMapper;
 import com.restaurante.app.repository.iRestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.restaurante.app.mapper.iMesaMapper;
-import com.restaurante.app.mapper.iUsuarioMapper;
 import com.restaurante.app.repository.iUsuarioRepository;
-import com.restaurante.app.repository.iReservaMesaRepository;
 import com.restaurante.app.repository.iMesaRepository;
 
 
@@ -31,21 +28,9 @@ public class ReservaService implements iReservaService{
     private iUsuarioRepository usuarioRepository;
 
     @Autowired
-    private iReservaMesaRepository reservaMesaRepository;
-
-    @Autowired
     private iMesaRepository mesaRepository;
-
-    @Autowired
-    private UsuarioService usuarioService;
-
     @Autowired
     private iReservaMapper mapper;
-
-    @Autowired
-    private iMesaMapper mesaMapper;
-    @Autowired
-    private iUsuarioMapper usuarioMapper;
 
     @Override
     public ReservaDTO ingresarReserva(ReservaDTO reservaDTO) {
@@ -88,10 +73,7 @@ public class ReservaService implements iReservaService{
                 }).collect(Collectors.toSet());
         reserva.setReservaMesas(listReservaMesa);
 
-
         reservaRepository.save(reserva);
-        //reservaMesaRepository.saveAll(listReservaMesa);
-
         return mapper.toReservaDTO(reserva);
     }
 

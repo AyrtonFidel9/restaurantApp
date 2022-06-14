@@ -11,7 +11,7 @@ import org.mapstruct.InheritInverseConfiguration;
 import java.util.List;
 
 /*ATENCION CON UNMAPPED TARGET*/
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface iUsuarioMapper {
 
     @Mappings({
@@ -22,11 +22,14 @@ public interface iUsuarioMapper {
             @Mapping(source = "cedula",target= "cedula"),
             @Mapping(source = "email",target= "email"),
             @Mapping(source = "password",target= "password"),
-            @Mapping(source = "rol",target= "rol"),
+            @Mapping(source = "rol",target= "rol")
     })
     UsuarioDTO toUsuarioDTO (Usuario usuario);
     List<UsuarioDTO> toUsuarioDTO (List<Usuario> usuarios);
 
     @InheritInverseConfiguration
+    @Mapping(target = "reservas", ignore = true)
+    @Mapping(target = "ventas", ignore = true)
+    @Mapping(target = "pedidos", ignore = true)
     Usuario toUsuario (UsuarioDTO usuario);
 }
