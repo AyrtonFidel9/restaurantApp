@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class detallePedidoKey implements Serializable {
+public class DetallePedidoKey implements Serializable {
 
     @Column(name = "idPedido")
     private int idPedido;

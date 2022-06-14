@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "DetallesPedidos")
-public class detallePedido {
-    @Id
+
+public class DetallePedido {
     @EmbeddedId
-    detallePedidoKey id;
+    DetallePedidoKey id;
 
     @ManyToOne
     @MapsId("idPedido")
@@ -27,11 +27,11 @@ public class detallePedido {
 
     private BigDecimal subtotal;
 
-    public detallePedidoKey getId() {
+    public DetallePedidoKey getId() {
         return id;
     }
 
-    public void setId(detallePedidoKey id) {
+    public void setId(DetallePedidoKey id) {
         this.id = id;
     }
 
