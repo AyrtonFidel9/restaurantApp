@@ -19,8 +19,7 @@ public interface iAlimentoMapper {
             @Mapping(source = "descripcion", target = "descripcion"),
             @Mapping(source = "precio", target = "precio"),
             @Mapping(source = "disponibilidad", target = "disponibilidad"),
-            @Mapping(source = "tipo", target = "tipo"),
-
+            @Mapping(source = "tipo", target = "tipo")
     })
     AlimentoDTO toAlimentoDTO(Alimento alimento);
     List<AlimentoDTO> toAlimentosDTO(List<Alimento> alimentos);

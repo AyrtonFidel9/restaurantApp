@@ -31,8 +31,8 @@ public class DetallePedidoKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof detallePedidoKey)) return false;
-        detallePedidoKey that = (detallePedidoKey) o;
+        if (!(o instanceof DetallePedidoKey)) return false;
+        DetallePedidoKey that = (DetallePedidoKey) o;
         return getIdPedido() == that.getIdPedido() && getIdAlimentos() == that.getIdAlimentos();
     }
 
