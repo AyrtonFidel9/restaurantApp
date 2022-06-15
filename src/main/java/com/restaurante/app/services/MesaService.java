@@ -2,8 +2,10 @@ package com.restaurante.app.services;
 
 import com.restaurante.app.dto.MesaDTO;
 import com.restaurante.app.entity.Restaurante;
-import org.mapstruct.factory.Mappers;
+import com.restaurante.app.exceptions.ResourceNotFoundException;
+import com.restaurante.app.exceptions.RestauranteAppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.restaurante.app.repository.iMesaRepository;
 import com.restaurante.app.mapper.iMesaMapper;
@@ -29,6 +31,19 @@ public class MesaService implements iMesaService{
     @Override
     public MesaDTO ingresarMesa(MesaDTO mesaDTO) {
 
+        // validar que la cantidad de asientos no sea 0
+        if(mesaDTO.getCapacidad()==0){
+            throw new RestauranteAppException(
+                    HttpStatus.BAD_REQUEST,
+                   "La cantidad de asientos o capacidad de la mesa no puede ser 0");
+        }
+
+        if(mesaDTO.getNombre().isEmpty()){
+            throw new RestauranteAppException(
+                    HttpStatus.BAD_REQUEST,
+                    "No existe un nombre para la mesa, no se aceptan nombres vacíos");
+        }
+
         mesaDTO.setIdRestaurante(1);
         int idRes = mesaDTO.getIdRestaurante();
         Mesa mesa = mapper.toMesa(mesaDTO);
@@ -43,8 +58,17 @@ public class MesaService implements iMesaService{
         Restaurante res = restauranteRepository
                 .findById(idRes)
                 .orElseThrow(()->
-                        new RuntimeException("Restaurante no encontrado"));
+                        new ResourceNotFoundException("Restaurante","id",idRes));
         mesa.setRestaurante(res);
+
+        int cantMesasOnTable = mesaRepository.countMesaByRestauranteId(idRes);
+
+        // VALIDAR que la cantidad de mesas a agregar sea la soportada por el restaurante
+        if(cantMesasOnTable >= res.getCantMesas()){
+            throw new RestauranteAppException(
+                    HttpStatus.BAD_REQUEST,
+                    "Ya no se pueden ingresar mas mesas, el limite es: "+res.getCantMesas());
+        }
 
         Mesa ingMesa = mesaRepository.save(mesa);
         return mapper.toMesaDTO(ingMesa);
@@ -52,7 +76,8 @@ public class MesaService implements iMesaService{
 
     /*
     * Por validar
-    *  Validar que la cantidad de mesas no sea superior a la capacidad del restaurante
+    *  Validar que la cantidad de mesas no sea superior a la capacidad del restaurante - LISTO
+    *  Validar que no sea una cadena vacia el nombre
     *  Validar que la cantidad no sea 0
     *  Validar que la el nombre UNIQUE no se repita con un mensaje o excepcion
     * */
@@ -67,7 +92,7 @@ public class MesaService implements iMesaService{
         Optional<Mesa> mesaResult = mesaRepository.findById(idMesa);
         return mapper.toMesaDTO(mesaResult
                 .orElseThrow(()->
-                        new RuntimeException("Mesa no encontrada")));
+                        new ResourceNotFoundException("Mesa","id",idMesa)));
     }
 
     @Override
@@ -84,7 +109,8 @@ public class MesaService implements iMesaService{
         mesa.setRestaurante(restauranteRepository
                 .findById(mesaDTO.getIdRestaurante())
                 .orElseThrow(()->
-                        new RuntimeException("Restaurante no encontrado")));
+                        new ResourceNotFoundException("Restaurante","id",
+                                mesaDTO.getIdRestaurante())));
         mesaRepository.save(mesa);
         return mapper.toMesaDTO(mesa);
     }
@@ -104,7 +130,8 @@ public class MesaService implements iMesaService{
         mesa.setRestaurante(restauranteRepository
                 .findById(mesaDTO.getIdRestaurante())
                 .orElseThrow(()->
-                        new RuntimeException("Restaurante no encontrado")));
+                        new ResourceNotFoundException("Restaurante","id",
+                                mesaDTO.getIdRestaurante())));
 
         mesa.setEstado(mesaDTO.isEstado());
 
