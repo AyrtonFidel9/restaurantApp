@@ -2,6 +2,7 @@ package com.restaurante.app.services;
 
 import com.restaurante.app.dto.MesaDTO;
 import com.restaurante.app.entity.Restaurante;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.restaurante.app.repository.iMesaRepository;
