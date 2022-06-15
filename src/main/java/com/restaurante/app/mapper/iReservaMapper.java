@@ -9,7 +9,7 @@ import com.restaurante.app.dto.ReservaDTO;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {iReservaMesaMapper.class})
 public interface iReservaMapper {
     @Mappings({
             @Mapping(source = "id",target = "idReserva"),

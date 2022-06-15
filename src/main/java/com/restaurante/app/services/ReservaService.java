@@ -64,13 +64,16 @@ public class ReservaService implements iReservaService{
                     Mesa mesa = mesaRepository.findById(reservaMesa
                                     .getId().getIdMesa())
                             .orElseThrow(() -> new RuntimeException("Mesa no encontrada"));
-
+                    
+                    //actualizar el estado de la mesa
+                    mesa.setEstado(true);
                     System.out.println(mesa.toString());
                     ReservaMesa reservarMesa = new ReservaMesa();
                     reservarMesa.setMesas(mesa);
                     reservarMesa.setReserva(reserva);
                     return reservarMesa;
                 }).collect(Collectors.toSet());
+
         reserva.setReservaMesas(listReservaMesa);
 
         reservaRepository.save(reserva);

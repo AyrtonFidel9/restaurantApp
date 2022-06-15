@@ -9,7 +9,7 @@ import org.mapstruct.Mappings;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {iMesaMapper.class})
 public interface iReservaMesaMapper {
     @Mappings({
             @Mapping(source = "mesas.id", target = "id.idMesa"),
