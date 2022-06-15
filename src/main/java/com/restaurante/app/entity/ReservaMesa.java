@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "ReservasMesas")
@@ -23,6 +25,10 @@ public class ReservaMesa {
     @MapsId("idMesa")
     @JoinColumn(name = "idMesa")
     Mesa mesas;
+
+    private LocalDate fecha;
+
+    private LocalTime hora;
 
     public ReservaMesaKey getId() {
         return id;
@@ -46,5 +52,21 @@ public class ReservaMesa {
 
     public void setMesas(Mesa mesas) {
         this.mesas = mesas;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
     }
 }
