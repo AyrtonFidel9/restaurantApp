@@ -1,12 +1,16 @@
 package com.restaurante.app.dto;
 
 import com.restaurante.app.entity.*;
+import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
+import java.time.LocalTime;
 import java.util.Set;
 
+@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RestauranteDTO {
     private int idRestaurante;
 
@@ -15,6 +19,10 @@ public class RestauranteDTO {
     private int cantMesas;
 
     private String propietario;
+
+    private LocalTime horaApertura;
+
+    private LocalTime horaCierre;
 
     private Set<Mesa> mesas;
 
@@ -27,4 +35,5 @@ public class RestauranteDTO {
     private Set<Venta> ventas;
 
     private Set<Pedido> pedidos;
+
 }

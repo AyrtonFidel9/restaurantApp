@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -15,7 +17,7 @@ public class MesaController {
     private MesaService mesaService;
 
     @PostMapping
-    public ResponseEntity<MesaDTO> ingresarMesa (@RequestBody MesaDTO mesaDTO){
+    public ResponseEntity<MesaDTO> ingresarMesa (@RequestBody @Valid MesaDTO mesaDTO){
         return new ResponseEntity<>(mesaService.ingresarMesa(mesaDTO), HttpStatus.CREATED);
     }
     @GetMapping
@@ -42,7 +44,7 @@ public class MesaController {
     //Editar global
     @PutMapping("/{id}")
     public ResponseEntity<MesaDTO> actualizarMesa (@PathVariable(name = "id") int id,
-                                                   @RequestBody MesaDTO mesaDTO){
+                                                   @RequestBody @Valid MesaDTO mesaDTO){
         MesaDTO mesaDTOresp = mesaService.actualizarMesa(id, mesaDTO);
         return new ResponseEntity<>(mesaDTOresp,HttpStatus.OK);
     }

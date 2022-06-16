@@ -14,7 +14,7 @@ public class Mesa {
     private int id;
     @Column(unique = true)
     private String nombre;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
     @JsonIgnore
     private Restaurante restaurante;

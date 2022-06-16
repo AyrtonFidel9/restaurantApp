@@ -1,6 +1,8 @@
 package com.restaurante.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,17 +16,20 @@ public class Reserva {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurante restaurante;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idUsuario", referencedColumnName = "id")
     private Usuario usuario;
 
     private LocalDate fecha;
 
     private LocalTime hora;
+
+    private int duracion;
 
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -76,5 +81,13 @@ public class Reserva {
 
     public void setReservaMesas(Set<ReservaMesa> reservaMesas) {
         this.reservaMesas = reservaMesas;
+    }
+
+    public int getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
     }
 }

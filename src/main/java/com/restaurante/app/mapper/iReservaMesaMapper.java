@@ -9,12 +9,14 @@ import org.mapstruct.Mappings;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {iMesaMapper.class})
 public interface iReservaMesaMapper {
     @Mappings({
             @Mapping(source = "mesas.id", target = "id.idMesa"),
             @Mapping(source = "reserva.id", target = "id.idReserva"),
-            @Mapping(source = "mesas", target = "mesa")
+            @Mapping(source = "mesas", target = "mesa"),
+            @Mapping(source = "fecha", target = "fecha"),
+            @Mapping(source = "hora", target = "hora")
     })
     ReservaMesaDTO toReservaMesaDTO (ReservaMesa reservaMesa);
     List<ReservaMesaDTO> toReservasMesasDTO (List<ReservaMesa> reservaMesaList);
