@@ -14,7 +14,7 @@ public class Mesa {
     private int id;
     @Column(unique = true)
     private String nombre;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
     @JsonIgnore
     private Restaurante restaurante;
@@ -26,10 +26,10 @@ public class Mesa {
     @Enumerated(EnumType.STRING)
     private TipoMesas tipo;
 
-    @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL)
     private Pedido pedido;
 
-    @OneToMany(mappedBy = "mesas", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "mesas", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<ReservaMesa> reservaMesas;
 

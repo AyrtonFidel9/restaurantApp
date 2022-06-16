@@ -16,12 +16,12 @@ public class Reserva {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurante restaurante;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idUsuario", referencedColumnName = "id")
     private Usuario usuario;
 
@@ -31,7 +31,7 @@ public class Reserva {
 
     private int duracion;
 
-    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<ReservaMesa> reservaMesas;
 
