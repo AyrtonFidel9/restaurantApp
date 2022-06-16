@@ -15,11 +15,11 @@ import java.util.Set;
 public class MenuDTO {
     private int id;
 
-    private Restaurante restaurante;
+    private int idRestaurante;
 
     private String nombre;
 
     private TipoMenu tipo;
 
-    private Set<Alimento> alimentos;
+    private Set<AlimentoDTO> alimentos;
 }

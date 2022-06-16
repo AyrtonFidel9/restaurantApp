@@ -7,8 +7,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "DetallesPedidos")
-
+@Table(name = "detallesPedidos")
 public class DetallePedido {
     @EmbeddedId
     DetallePedidoKey id;
