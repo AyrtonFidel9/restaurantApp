@@ -14,7 +14,6 @@ import com.restaurante.app.repository.iUsuarioRepository;
 import com.restaurante.app.repository.iMesaRepository;
 import com.restaurante.app.repository.iReservaMesaRepository;
 
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
@@ -43,9 +42,16 @@ public class ReservaService implements iReservaService{
 
     @Override
     public ReservaDTO ingresarReserva(ReservaDTO reservaDTO) {
-
         // se obtiene la hora actual
         LocalTime horaActual = LocalTime.now();
+
+        //comprobar que la hora de la reserva sea mayor a la actual
+
+        if(reservaDTO.getHora().isBefore(horaActual)){
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                    "La hora "+reservaDTO.getHora()+" no se encuentra disponible para una reservacion, " +
+                            "no se puede reservar en el pasado");
+        }
 
         // se obtiene la fecha actual
         LocalDate fechaActual = LocalDate.now();
@@ -84,8 +90,13 @@ public class ReservaService implements iReservaService{
 
         reserva.setUsuario(usuarioRes);
 
-        //Ingresar las mesas que forman parte de la reserva
+        if(reservaRepository.countByUsuarioIdAndFecha(usuarioRes.getId(), fechaActual) > 2){
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                    "El usuario "+usuarioRes.getNombre()+" "+usuarioRes.getApellido()+" solo" +
+                            " puede realizar como máximo 2 reservaciones por día");
+        }
 
+        //Ingresar las mesas que forman parte de la reserva
         reserva.setReservaMesas(
                 createListReservasMesas(reserva, reservaDTO, horaActual,fechaActual));
 
@@ -120,6 +131,12 @@ public class ReservaService implements iReservaService{
         // se obtiene la hora actual
         LocalTime horaActual = LocalTime.now();
 
+        if(reservaDTO.getHora().isBefore(horaActual)){
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                    "La hora "+reservaDTO.getHora()+" no se encuentra disponible para una reservacion, " +
+                            "no se puede reservar en el pasado");
+        }
+
         // se obtiene la fecha actual
         LocalDate fechaActual = LocalDate.now();
         reservaNueva.setReservaMesas(createListReservasMesas(reservaNueva, reservaDTO, horaActual,fechaActual ));
@@ -151,14 +168,26 @@ public class ReservaService implements iReservaService{
                     Set<ReservaMesa> setReservas =
                             reservaMesaRepository.findReservaMesaByFechaAndHoraAfter(fechaActual,horaActual);
 
+                    System.out.println(setReservas.toString());
+
                     if(!setReservas.isEmpty()){
                         setReservas.stream().forEach(item -> {
                             if(item.getId().getIdMesa() == mesa.getId()){
                                 LocalTime horaInicio = item.getHora();
                                 LocalTime horaFin = item.getHora().plusMinutes(
                                         (long) reserva.getDuracion());
-                                if(reserva.getHora().isAfter(horaInicio) &&
-                                        reserva.getHora().isBefore(horaFin)){
+
+                                System.out.println(horaInicio+" - "+horaFin);
+
+                                System.out.println((reserva.getHora().isAfter(horaInicio) &&
+                                        reserva.getHora().isBefore(horaFin)));
+
+                                System.out.println(reserva.getHora().equals(horaInicio));
+
+                                if((reserva.getHora().isAfter(horaInicio) &&
+                                        reserva.getHora().isBefore(horaFin) || (
+                                                reserva.getHora().equals(horaInicio)
+                                        ))){
                                     throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
                                             "La Mesa "+mesa.getNombre()+
                                                     " se encuentra reservada entre "

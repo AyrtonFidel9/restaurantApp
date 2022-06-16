@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,7 +17,7 @@ public class ReservaController {
     private ReservaService reservaService;
 
     @PostMapping
-    public ResponseEntity<ReservaDTO> ingresarReserva (@RequestBody ReservaDTO reservaDTO){
+    public ResponseEntity<ReservaDTO> ingresarReserva (@RequestBody @Valid ReservaDTO reservaDTO){
         return new ResponseEntity<>(reservaService.ingresarReserva(reservaDTO), HttpStatus.CREATED);
     }
 
@@ -34,5 +35,11 @@ public class ReservaController {
         reservaService.buscarReserva(id);
         reservaService.eliminarReserva(id);
         return new ResponseEntity<>("La Reserva del usuario "+id+" ha sido eliminada con éxito", HttpStatus.OK);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<ReservaDTO> actualizarReserva (@PathVariable(name = "id") int id,
+                                                         @RequestBody @Valid ReservaDTO reservaDTO){
+        ReservaDTO reserva = reservaService.actualizarReserva(id, reservaDTO);
+        return new ResponseEntity<>(reserva,HttpStatus.OK);
     }
 }

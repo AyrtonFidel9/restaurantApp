@@ -1,5 +1,6 @@
 package com.restaurante.app.advice;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,14 @@ public class ApplicationExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ResourceNotFoundException.class)
     public Map<String,String> resourcesException(ResourceNotFoundException ex){
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", ex.getMessage());
+        return errorMap;
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public Map<String,String> resourcesException(SQLIntegrityConstraintViolationException ex){
         Map<String, String> errorMap = new HashMap<>();
         errorMap.put("errorMessage", ex.getMessage());
         return errorMap;
