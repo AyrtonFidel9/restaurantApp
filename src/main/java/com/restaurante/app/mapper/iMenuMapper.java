@@ -11,10 +11,9 @@ import org.mapstruct.Mappings;
 public interface iMenuMapper {
     @Mappings({
             @Mapping(source = "id", target = "id"),
-            @Mapping(source = "restaurante", target = "restaurante"),
+            @Mapping(source = "restaurante.id", target = "idRestaurante"),
             @Mapping(source = "nombre", target = "nombre"),
-            @Mapping(source = "tipo", target = "tipo"),
-            @Mapping(source = "alimentos", target = "alimentos")
+            @Mapping(source = "tipo", target = "tipo")
     })
     MenuDTO toMenuDTO(Menu menu);
 

@@ -7,11 +7,9 @@ import java.math.BigDecimal;
 
 @Data
 public class DetallePedidoDTO {
-    private DetallePedidoKey id;
+    private int idPedido;
 
-    private PedidoDTO pedido;
-
-    private AlimentoDTO alimento;
+    private int idAlimento;
 
     private int cantidadAlimento;
 

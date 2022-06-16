@@ -65,8 +65,7 @@ public class PedidoService implements iPedidoService{
                 .getDetallePedidos()
                 .stream()
                 .map(detallePedido -> {
-                    Alimento alimento = alimentoRepository.findById(detallePedido
-                                    .getId().getIdAlimentos())
+                    Alimento alimento = alimentoRepository.findById(detallePedido.getIdAlimento())
                             .orElseThrow(() -> new RuntimeException("Alimento no encontrada"));
                     DetallePedido detallarPedido = new DetallePedido();
                     detallarPedido.setAlimentos(alimento);

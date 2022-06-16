@@ -13,10 +13,10 @@ import java.util.List;
 public interface iPedidoMapper {
     @Mappings({
             @Mapping(source = "id", target = "idPedido"),
-            @Mapping(source = "restaurante", target = "restauranteDTO"),
-            @Mapping(source = "mesas", target = "mesaDTO"),
-            @Mapping(source = "usuario", target = "usuarioDTO"),
-            @Mapping(source = "ventas", target = "ventas"),
+            @Mapping(source = "restaurante.id", target = "idRestaurante"),
+            @Mapping(source = "mesas.id", target = "idMesa"),
+            @Mapping(source = "usuario.id", target = "idUsuario"),
+            @Mapping(source = "ventas.id", target = "idVentas"),
             @Mapping(source = "estadoPedido", target = "estadoPedido")
     })
     PedidoDTO toPedidoDTO(Pedido pedido);

@@ -23,5 +23,4 @@ public interface iReservaMesaMapper {
 
     @InheritInverseConfiguration
     ReservaMesa toReservaMesa(ReservaMesaDTO reservaMesaDTO);
-    List<ReservaMesa> toReservasMesas (List<ReservaMesaDTO> reservaMesaDTOList);
 }

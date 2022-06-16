@@ -23,6 +23,4 @@ public class AlimentoDTO {
     private boolean disponibilidad;
 
     private TipoMenu tipo;
-
-    private int idDetallePedidos;
 }

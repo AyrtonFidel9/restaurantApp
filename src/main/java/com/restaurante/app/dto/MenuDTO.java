@@ -21,5 +21,4 @@ public class MenuDTO {
 
     private TipoMenu tipo;
 
-    private Set<AlimentoDTO> alimentos;
 }
