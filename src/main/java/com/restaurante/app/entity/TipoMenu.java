@@ -6,5 +6,12 @@ public enum TipoMenu {
     primeros,
     segundos,
     ensaladas,
-    sopas
+    sopas,
+    Ensaladas,
+    Ensalada,
+    Postre,
+    Postres,
+    Bebida,
+    Bebidas
+
 }
