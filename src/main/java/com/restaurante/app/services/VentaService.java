@@ -1,5 +1,6 @@
 package com.restaurante.app.services;
 
+import com.restaurante.app.dto.UsuarioDTO;
 import com.restaurante.app.dto.VentaDTO;
 import com.restaurante.app.entity.Venta;
 import com.restaurante.app.mapper.iVentaMapper;
@@ -45,7 +46,7 @@ public class VentaService implements iVentaService {
     @Override
     public void eliminarVenta(int idVenta)
     {
-
+        ventaRepository.deleteById(idVenta);
     }
 
     @Override
