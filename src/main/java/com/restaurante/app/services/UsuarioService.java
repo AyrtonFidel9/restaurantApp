@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService implements iUsuarioService{
@@ -39,12 +40,15 @@ public class UsuarioService implements iUsuarioService{
 
     @Override
     public UsuarioDTO buscarUsuario(int idUsuario) {
-        return null;
+        Optional<Usuario> usuarioResult = usuarioRepository.findById(idUsuario);
+        return mapper.toUsuarioDTO(usuarioResult
+                .orElseThrow(()->
+                        new RuntimeException("Usuario no encontrado")));
     }
 
     @Override
     public void eliminarUsuario(int idUsuario) {
-
+        usuarioRepository.deleteById(idUsuario);
     }
 
     @Override

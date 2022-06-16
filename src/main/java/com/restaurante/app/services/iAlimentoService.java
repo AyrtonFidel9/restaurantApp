@@ -14,7 +14,7 @@ public interface iAlimentoService {
 
     List<AlimentoDTO> obtenerAlimento();
 
-    AlimentoDTO cambiarDisponibilidad(int idAlimeto, boolean disponibilidad);
+    AlimentoDTO cambiarDisponibilidad(int idAlimento, boolean disponibilidad);
 
     AlimentoDTO actualizarAlimento(int idAlimento, AlimentoDTO alimentoDTO);
 

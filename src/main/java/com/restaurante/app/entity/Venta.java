@@ -4,21 +4,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-enum TipoPago{
-    efectivo,
-    debito,
-    credito,
-    transferencia
-}
-
-enum Calificacion{
-    excelente,
-    muy_bueno,
-    bueno,
-    malo,
-    muy_malo
-}
-
 @Entity
 @Table(name = "Ventas")
 public class Venta {
