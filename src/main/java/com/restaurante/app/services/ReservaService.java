@@ -12,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.restaurante.app.repository.iUsuarioRepository;
 import com.restaurante.app.repository.iMesaRepository;
+import com.restaurante.app.repository.iReservaMesaRepository;
 
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +31,9 @@ public class ReservaService implements iReservaService{
     private iRestauranteRepository restauranteRepository;
 
     @Autowired
+    private iReservaMesaRepository reservaMesaRepository;
+
+    @Autowired
     private iUsuarioRepository usuarioRepository;
 
     @Autowired
@@ -38,6 +43,9 @@ public class ReservaService implements iReservaService{
 
     @Override
     public ReservaDTO ingresarReserva(ReservaDTO reservaDTO) {
+
+        // se obtiene la hora actual
+        LocalTime horaActual = LocalTime.now();
 
         // se obtiene la fecha actual
         LocalDate fechaActual = LocalDate.now();
@@ -62,6 +70,14 @@ public class ReservaService implements iReservaService{
 
         reserva.setRestaurante(res);
 
+
+        if((reservaDTO.getHora().isBefore(res.getHoraApertura()) ||
+                reservaDTO.getHora().isAfter(res.getHoraCierre()))){
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                    "La hora "+ reservaDTO.getHora() +
+                            " esta fuera de las horas laborables del restaurante");
+        }
+
         //buscar y guardar el objeto usuario
         Usuario usuarioRes = usuarioRepository.findById(idUsu)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario","id",idUsu));
@@ -69,37 +85,9 @@ public class ReservaService implements iReservaService{
         reserva.setUsuario(usuarioRes);
 
         //Ingresar las mesas que forman parte de la reserva
-        Set<ReservaMesa> listReservaMesa = Collections.EMPTY_SET;
-        listReservaMesa = reservaDTO
-                .getReservaMesas()
-                .stream()
-                .map(reservaMesa -> {
-                    Mesa mesa = mesaRepository.findById(reservaMesa
-                                    .getId().getIdMesa())
-                            .orElseThrow(() -> new ResourceNotFoundException("Mesa","id",
-                                    reservaMesa.getId().getIdMesa()));
 
-
-
-                    /*
-                    if(mesa.isEstado()){
-                        throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
-                                "La mesa "+mesa.getNombre()+ " ya se encuentra reservada," +
-                                        "seleccione otra mesa, por favor");
-                    }*/
-
-                    //actualizar el estado de la mesa
-                    //mesa.setEstado(true);
-                    System.out.println(mesa.toString());
-                    ReservaMesa reservarMesa = new ReservaMesa();
-                    reservarMesa.setMesas(mesa);
-                    reservarMesa.setReserva(reserva);
-                    reservarMesa.setFecha(reserva.getFecha());
-                    reservarMesa.setHora(reserva.getHora());
-                    return reservarMesa;
-                }).collect(Collectors.toSet());
-
-        reserva.setReservaMesas(listReservaMesa);
+        reserva.setReservaMesas(
+                createListReservasMesas(reserva, reservaDTO, horaActual,fechaActual));
 
         reservaRepository.save(reserva);
         return mapper.toReservaDTO(reserva);
@@ -113,7 +101,7 @@ public class ReservaService implements iReservaService{
     @Override
     public ReservaDTO buscarReserva(int idReserva) {
         return mapper.toReservaDTO(reservaRepository.findById(idReserva)
-                .orElseThrow(()-> new RuntimeException("Reserva no encontrada")));
+                .orElseThrow(()-> new RestauranteAppException(HttpStatus.BAD_REQUEST,"Reserva no encontrada")));
     }
 
     @Override
@@ -123,17 +111,21 @@ public class ReservaService implements iReservaService{
 
     @Override
     public ReservaDTO actualizarReserva(int idReserva, ReservaDTO reservaDTO) {
-        Reserva reserva = mapper.toReserva(buscarReserva(idReserva));
+        Reserva reservaNueva = mapper.toReserva(buscarReserva(idReserva)); // compruebo si existe la reserva
 
-        reserva.setFecha(reservaDTO.getFecha());
-        reserva.setHora(reservaDTO.getHora());
-        //reserva.setUsuario();
-        reserva.setRestaurante(restauranteRepository
-                .findById(reservaDTO.getIdRestaurante())
-                .orElseThrow(()->new RuntimeException("Restaurante no encontrado")));
+        reservaNueva.setFecha(reservaDTO.getFecha());
+        reservaNueva.setHora(reservaDTO.getHora());
+        reservaNueva.setDuracion(reservaDTO.getDuracion());
 
-        reservaRepository.save(reserva);
-        return mapper.toReservaDTO(reserva);
+        // se obtiene la hora actual
+        LocalTime horaActual = LocalTime.now();
+
+        // se obtiene la fecha actual
+        LocalDate fechaActual = LocalDate.now();
+        reservaNueva.setReservaMesas(createListReservasMesas(reservaNueva, reservaDTO, horaActual,fechaActual ));
+
+
+        return mapper.toReservaDTO(reservaRepository.save(reservaNueva));
     }
     /*
     * VALIDACIONES
@@ -142,4 +134,49 @@ public class ReservaService implements iReservaService{
     * - Validar que la hora se encuentre en horas laborales
     * - Validar que la mesa no se encuentr ocupada
     * */
+
+    @Override
+    public Set<ReservaMesa> createListReservasMesas(Reserva reserva, ReservaDTO reservaDTO, LocalTime horaActual, LocalDate fechaActual) {
+        Set<ReservaMesa> listReservaMesa = Collections.EMPTY_SET;
+        listReservaMesa = reservaDTO
+                .getReservaMesas()
+                .stream()
+                .map(reservaMesa -> {
+                    Mesa mesa = mesaRepository.findById(reservaMesa
+                                    .getId().getIdMesa())
+                            .orElseThrow(() -> new ResourceNotFoundException("Mesa","id",
+                                    reservaMesa.getId().getIdMesa()));
+
+
+                    Set<ReservaMesa> setReservas =
+                            reservaMesaRepository.findReservaMesaByFechaAndHoraAfter(fechaActual,horaActual);
+
+                    if(!setReservas.isEmpty()){
+                        setReservas.stream().forEach(item -> {
+                            if(item.getId().getIdMesa() == mesa.getId()){
+                                LocalTime horaInicio = item.getHora();
+                                LocalTime horaFin = item.getHora().plusMinutes(
+                                        (long) reserva.getDuracion());
+                                if(reserva.getHora().isAfter(horaInicio) &&
+                                        reserva.getHora().isBefore(horaFin)){
+                                    throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                                            "La Mesa "+mesa.getNombre()+
+                                                    " se encuentra reservada entre "
+                                                    +horaInicio+" - "+horaFin);
+                                }
+                            }
+                        });
+                    }
+                    //actualizar el estado de la mesa
+                    //mesa.setEstado(true);
+                    System.out.println(mesa.toString());
+                    ReservaMesa reservarMesa = new ReservaMesa();
+                    reservarMesa.setMesas(mesa);
+                    reservarMesa.setReserva(reserva);
+                    reservarMesa.setFecha(reserva.getFecha());
+                    reservarMesa.setHora(reserva.getHora());
+                    return reservarMesa;
+                }).collect(Collectors.toSet());
+        return listReservaMesa;
+    }
 }

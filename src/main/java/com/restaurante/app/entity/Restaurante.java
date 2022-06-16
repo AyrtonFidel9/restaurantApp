@@ -1,7 +1,9 @@
 package com.restaurante.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mysql.cj.protocol.a.LocalTimeValueEncoder;
 
 import java.util.Set;
+import java.time.LocalTime;
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +18,10 @@ public class Restaurante {
     @Column(name="cantMesas", length=100, nullable=false)
     private int cantMesas;
     private String propietario;
+
+    private LocalTime horaApertura;
+
+    private LocalTime horaCierre;
 
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -114,5 +120,21 @@ public class Restaurante {
 
     public void setPedidos(Set<Pedido> pedidos) {
         this.pedidos = pedidos;
+    }
+
+    public LocalTime getHoraApertura() {
+        return horaApertura;
+    }
+
+    public void setHoraApertura(LocalTime horaApertura) {
+        this.horaApertura = horaApertura;
+    }
+
+    public LocalTime getHoraCierre() {
+        return horaCierre;
+    }
+
+    public void setHoraCierre(LocalTime horaCierre) {
+        this.horaCierre = horaCierre;
     }
 }

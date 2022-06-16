@@ -1,6 +1,4 @@
 package com.restaurante.app.dto;
-
-import com.restaurante.app.entity.Reserva;
 import com.restaurante.app.entity.ReservaMesaKey;
 import lombok.Data;
 import lombok.Getter;

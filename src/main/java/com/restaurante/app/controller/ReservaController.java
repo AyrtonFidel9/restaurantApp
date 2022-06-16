@@ -31,7 +31,7 @@ public class ReservaController {
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteMesa (@PathVariable(name = "id") int id){
-        ReservaDTO reservaDTO = reservaService.buscarReserva(id);
+        reservaService.buscarReserva(id);
         reservaService.eliminarReserva(id);
         return new ResponseEntity<>("La Reserva del usuario "+id+" ha sido eliminada con éxito", HttpStatus.OK);
     }

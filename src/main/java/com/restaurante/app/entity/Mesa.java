@@ -26,10 +26,10 @@ public class Mesa {
     @Enumerated(EnumType.STRING)
     private TipoMesas tipo;
 
-    @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL, orphanRemoval = true)
     private Pedido pedido;
 
-    @OneToMany(mappedBy = "mesas", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "mesas", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<ReservaMesa> reservaMesas;
 
