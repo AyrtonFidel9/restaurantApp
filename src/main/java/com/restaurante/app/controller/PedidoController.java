@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/pedidos")
 public class PedidoController {
 
-
+    @Autowired
     private PedidoService pedidoService;
 
     @PostMapping
