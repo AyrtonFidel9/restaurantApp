@@ -7,17 +7,17 @@ import java.util.Set;
 
 @Data
 public class PedidoDTO {
-    private int id;
+    private int idPedido;
 
-    private Restaurante restaurante;
+    private int idRestaurante;
 
-    private Mesa mesas;
+    private int idMesa;
 
-    private Usuario usuario;
+    private int idUsuario;
 
-    private Venta ventas;
+    private int idVentas;
 
-    private Set<DetallePedido> DetallePedidos;
+    private Set<DetallePedidoDTO> DetallePedidos;
 
     private EstadoPedido estadoPedido;
 }

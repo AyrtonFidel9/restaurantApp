@@ -24,5 +24,5 @@ public class AlimentoDTO {
 
     private TipoMenu tipo;
 
-    private Set<DetallePedido> DetallePedidos;
+    private int idDetallePedidos;
 }
