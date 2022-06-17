@@ -11,7 +11,7 @@ public class Venta {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idUsuario", referencedColumnName = "id")
     private Usuario usuario;
 
@@ -19,7 +19,7 @@ public class Venta {
     @JoinColumn(name="idPedido", referencedColumnName = "id")
     private Pedido pedido;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
     private Restaurante restaurante;
 

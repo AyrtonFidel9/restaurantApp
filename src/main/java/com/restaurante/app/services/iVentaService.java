@@ -1,8 +1,10 @@
 package com.restaurante.app.services;
 
+import com.restaurante.app.dto.DetallePedidoDTO;
 import com.restaurante.app.dto.VentaDTO;
 import com.restaurante.app.entity.Venta;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface iVentaService {
@@ -11,7 +13,6 @@ public interface iVentaService {
     VentaDTO actualizarVenta(int idVenta, VentaDTO ventaDTO);
     void eliminarVenta(int idVenta);
     List<VentaDTO> obtenerVentas();
-
-    //VentaDTO obtenerTotal(VentaDTO ventaDTO, DetallePedidoDTO detallePedidoDTO);
+    BigDecimal obtenerTotal(VentaDTO ventaDTO);
 
 }

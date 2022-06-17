@@ -1,6 +1,7 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.UsuarioDTO;
+import com.restaurante.app.entity.Pedido;
 import com.restaurante.app.entity.Restaurante;
 import com.restaurante.app.entity.Usuario;
 import com.restaurante.app.mapper.iUsuarioMapper;
@@ -46,6 +47,19 @@ public class UsuarioService implements iUsuarioService{
                         new RuntimeException("Usuario no encontrado")));
     }
 
+    @Override
+    public UsuarioDTO actualizarUsuario(int idUsuario,UsuarioDTO usuarioDTO)
+    {
+        Usuario usuarioex = mapper.toUsuario(buscarUsuario(idUsuario)); //comprueba si existe el usuario
+        usuarioex.setNombre(usuarioDTO.getNombre());
+        usuarioex.setApellido(usuarioDTO.getApellido());
+        usuarioex.setCedula(usuarioDTO.getCedula());
+        usuarioex.setEmail(usuarioDTO.getEmail());
+        usuarioex.setPassword(usuarioDTO.getPassword());
+        usuarioex.setRol(usuarioDTO.getRol());
+        usuarioRepository.save(usuarioex);
+        return mapper.toUsuarioDTO(usuarioex);
+    }
     @Override
     public void eliminarUsuario(int idUsuario) {
         usuarioRepository.deleteById(idUsuario);
