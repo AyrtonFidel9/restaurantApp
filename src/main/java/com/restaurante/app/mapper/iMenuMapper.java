@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface iMenuMapper {
     @Mappings({
@@ -16,6 +18,7 @@ public interface iMenuMapper {
             @Mapping(source = "tipo", target = "tipo")
     })
     MenuDTO toMenuDTO(Menu menu);
+    List<MenuDTO> toMenusDTO (List<Menu> menus);
 
     @InheritInverseConfiguration
     Menu toMenu (MenuDTO menu);

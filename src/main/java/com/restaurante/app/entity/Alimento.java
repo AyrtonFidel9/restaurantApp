@@ -8,7 +8,7 @@ public class Alimento {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idMenu", referencedColumnName = "id")
     private Menu menu;
 

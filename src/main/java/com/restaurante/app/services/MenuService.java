@@ -1,8 +1,10 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.MenuDTO;
+import com.restaurante.app.dto.MesaDTO;
 import com.restaurante.app.entity.Menu;
 import com.restaurante.app.entity.Restaurante;
+import com.restaurante.app.exceptions.ResourceNotFoundException;
 import com.restaurante.app.mapper.iMenuMapper;
 import com.restaurante.app.repository.iMenuRepository;
 import com.restaurante.app.repository.iRestauranteRepository;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MenuService implements iMenusService{
@@ -43,22 +46,31 @@ public class MenuService implements iMenusService{
     }
 
     @Override
-    public void elimiarMenu(int idMenu) {
-
-    }
+    public void elimiarMenu(int idMenu) {menuRepository.deleteById(idMenu);}
 
     @Override
     public MenuDTO buscarMenu(int idMenu) {
-        return null;
+        Optional<Menu> menuResult = menuRepository.findById(idMenu);
+        return mapper.toMenuDTO(menuResult
+                .orElseThrow(()->
+                        new ResourceNotFoundException("Menu","id",idMenu)));
     }
 
     @Override
     public List<MenuDTO> obtenerMenu() {
-        return null;
+        return mapper.toMenusDTO((List<Menu>) menuRepository.findAll());
     }
 
     @Override
     public MenuDTO actualizarMenu(int idMenu, MenuDTO menuDTO) {
+
+        if (menuRepository.existsById(idMenu)){
+            Menu menu = mapper.toMenu(menuDTO);
+            menuRepository.save(menu);
+
+            return mapper.toMenuDTO(menu);
+        }
+
         return null;
     }
 }
