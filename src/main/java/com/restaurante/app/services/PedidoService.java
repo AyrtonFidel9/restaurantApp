@@ -2,6 +2,8 @@ package com.restaurante.app.services;
 
 import com.restaurante.app.dto.PedidoDTO;
 import com.restaurante.app.entity.*;
+import com.restaurante.app.exceptions.ResourceNotFoundException;
+import com.restaurante.app.exceptions.RestauranteAppException;
 import com.restaurante.app.mapper.iPedidoMapper;
 import com.restaurante.app.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ public class PedidoService implements iPedidoService{
     @Autowired
     private iUsuarioRepository usuarioRepository;
 
+    @Autowired
     private iAlimentoRepository alimentoRepository;
 
     @Autowired
@@ -67,11 +70,15 @@ public class PedidoService implements iPedidoService{
                 .getDetallePedidos()
                 .stream()
                 .map(detallePedido -> {
+                    System.out.println("----------> "+detallePedido.getIdAlimento());
                     Alimento alimento = alimentoRepository.findById(detallePedido.getIdAlimento())
-                            .orElseThrow(() -> new RuntimeException("Alimento no encontrada"));
+                            .orElseThrow(() -> new ResourceNotFoundException("Alimento","id",detallePedido.getIdAlimento()));
+                    System.out.println("LLLLEEEGUEEEEE");
                     DetallePedido detallarPedido = new DetallePedido();
                     detallarPedido.setAlimentos(alimento);
                     detallarPedido.setPedido(pedido);
+                    System.out.println(detallePedido.getCantidadAlimento());
+                    detallarPedido.setCantidadAlimento(detallePedido.getCantidadAlimento());
                     detallarPedido.setSubtotal(
                             BigDecimal.valueOf(alimento.getPrecio() * detallarPedido.getCantidadAlimento())
                     );

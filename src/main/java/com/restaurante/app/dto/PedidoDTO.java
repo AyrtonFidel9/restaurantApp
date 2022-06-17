@@ -8,6 +8,8 @@ import lombok.Setter;
 import java.util.Set;
 
 @Data
+@Getter
+@Setter
 public class PedidoDTO {
     private int idPedido;
 
@@ -17,9 +19,7 @@ public class PedidoDTO {
 
     private int idUsuario;
 
-    private int idVentas;
-
-    private Set<DetallePedidoDTO> DetallePedidos;
-
     private EstadoPedido estadoPedido;
+
+    private Set<DetallePedidoDTO> detallePedidos;
 }

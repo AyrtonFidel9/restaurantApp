@@ -4,6 +4,7 @@ import com.restaurante.app.dto.AlimentoDTO;
 import com.restaurante.app.entity.Alimento;
 import com.restaurante.app.entity.Menu;
 import com.restaurante.app.entity.TipoMenu;
+import com.restaurante.app.exceptions.ResourceNotFoundException;
 import com.restaurante.app.mapper.iAlimentoMapper;
 import com.restaurante.app.repository.iAlimentoRepository;
 import com.restaurante.app.repository.iMenuRepository;
@@ -52,7 +53,7 @@ public class AlimentosService implements iAlimentoService{
 
         return mapper.toAlimentoDTO(alimentoResult
                 .orElseThrow(()->
-                        new RuntimeException("Alimento no encontrado")
+                        new ResourceNotFoundException("Alimento","id",idAlimento)
                 ));
     }
 
@@ -72,7 +73,9 @@ public class AlimentosService implements iAlimentoService{
 
     @Override
     public AlimentoDTO actualizarAlimento(int idAlimento, AlimentoDTO alimentoDTO) {
-        return null;
+        AlimentoDTO alimentoEncontrado = buscarAlimento(idAlimento);
+        alimentoEncontrado = alimentoDTO;
+        return mapper.toAlimentoDTO(alimentoRepository.save(mapper.toAlimento(alimentoEncontrado)));
     }
 
     @Override

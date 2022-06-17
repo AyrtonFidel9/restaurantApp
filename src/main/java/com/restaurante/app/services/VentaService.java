@@ -26,6 +26,9 @@ public class VentaService implements iVentaService {
     private iPedidoRepository pedidoRepository;
     @Autowired
     private iRestauranteRepository restauranteRepository;
+
+    @Autowired
+    private iDetallePedidoRepository detallePedidoRepository;
     @Autowired
     private iVentaMapper mapper;
 
@@ -45,12 +48,15 @@ public class VentaService implements iVentaService {
 
         Pedido pedido = pedidoRepository.findById(idP).orElseThrow(()->
                 new RuntimeException("Pedido no encontrado"));
+
         venta.setPedido(pedido);
 
         Restaurante res = restauranteRepository.findById(idRes).
                 orElseThrow(()->
                         new RuntimeException("Restaurante no encontrado"));
         venta.setRestaurante(res);
+
+        venta.setTotal(obtenerTotal(ventaDTO));
 
         Venta igventa = ventaRepository.save(venta);
         return mapper.toVentaDTO(igventa);
@@ -90,9 +96,13 @@ public class VentaService implements iVentaService {
     @Override
     public BigDecimal obtenerTotal(VentaDTO ventaDTO)
     {
-        iDetallePedidoRepository detallePedidoRepository = null;
-        BigDecimal impuesto = BigDecimal.valueOf(1).add(ventaDTO.getImpuestos());
+
+        BigDecimal impuesto = BigDecimal.valueOf(1+ventaDTO.getImpuestos().floatValue());
+        System.out.println("impuesto ->>> "+impuesto);
+        System.out.println("ID PEDIDO _>>>> "+ventaDTO.getIdPedido());
+        System.out.println("subtotal suma ->>> "+detallePedidoRepository.sumSubTotalDetallePedidoByIdPedido(ventaDTO.getIdPedido()));
         BigDecimal total = detallePedidoRepository.sumSubTotalDetallePedidoByIdPedido(ventaDTO.getIdPedido()).multiply(impuesto);
+        System.out.println(total);
         return total;
         /*
         iDetallePedidoRepository detallePedidoRepository;

@@ -1,6 +1,7 @@
 package com.restaurante.app.controller;
 
 import com.restaurante.app.dto.AlimentoDTO;
+import com.restaurante.app.entity.Alimento;
 import com.restaurante.app.services.AlimentosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,13 @@ public class AlimentoController {
     public ResponseEntity<String> deleteAlimento(@PathVariable(name = "id") int id){
         alimentosService.eliminarAlimento(id);
         return new ResponseEntity<>("Alimento con ID:"+id+" eliminado con éxito",HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AlimentoDTO> actualizarAlimento(@PathVariable(name = "id") int id,
+                                                 @RequestBody AlimentoDTO alimentoDTO){
+        AlimentoDTO alimentoResp = alimentosService.actualizarAlimento(id, alimentoDTO);
+        return new ResponseEntity<>(alimentoResp,HttpStatus.OK);
     }
 
 }

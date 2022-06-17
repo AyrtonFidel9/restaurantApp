@@ -1,6 +1,8 @@
 package com.restaurante.app.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,22 +13,24 @@ public class Pedido {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
+    @JsonIgnore
     private Restaurante restaurante;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idMesa", referencedColumnName = "id")
     private Mesa mesas;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="idUsuario", referencedColumnName = "id")
     private Usuario usuario;
 
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Venta ventas;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<DetallePedido> DetallePedidos;
 
     @Enumerated(EnumType.STRING)

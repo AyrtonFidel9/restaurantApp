@@ -1,20 +1,22 @@
 package com.restaurante.app.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "detallesPedidos")
+@Table(name = "DetallesPedidos")
 public class DetallePedido {
     @EmbeddedId
-    DetallePedidoKey id;
+    DetallePedidoKey id = new DetallePedidoKey();
 
     @ManyToOne
     @MapsId("idPedido")
     @JoinColumn(name = "idPedido")
+    @JsonIgnore
     Pedido pedido;
 
     @ManyToOne

@@ -26,8 +26,8 @@ public class Mesa {
     @Enumerated(EnumType.STRING)
     private TipoMesas tipo;
 
-    @OneToOne(mappedBy = "mesas",cascade = CascadeType.ALL)
-    private Pedido pedido;
+    @OneToMany(mappedBy = "mesas",cascade = CascadeType.ALL)
+    private Set<Pedido> pedido;
 
     @OneToMany(mappedBy = "mesas", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -73,11 +73,11 @@ public class Mesa {
         this.tipo = tipo;
     }
 
-    public Pedido getPedido() {
+    public Set<Pedido> getPedido() {
         return pedido;
     }
 
-    public void setPedido(Pedido pedido) {
+    public void setPedido(Set<Pedido> pedido) {
         this.pedido = pedido;
     }
 

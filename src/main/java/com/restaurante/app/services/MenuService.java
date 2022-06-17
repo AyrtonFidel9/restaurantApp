@@ -64,13 +64,11 @@ public class MenuService implements iMenusService{
     @Override
     public MenuDTO actualizarMenu(int idMenu, MenuDTO menuDTO) {
 
-        if (menuRepository.existsById(idMenu)){
-            Menu menu = mapper.toMenu(menuDTO);
-            menuRepository.save(menu);
+        Menu menu = mapper.toMenu(buscarMenu(idMenu));
 
-            return mapper.toMenuDTO(menu);
-        }
+        menu.setTipo(menuDTO.getTipo());
+        menu.setNombre(menuDTO.getNombre());
 
-        return null;
+        return mapper.toMenuDTO(menuRepository.save(menu));
     }
 }
