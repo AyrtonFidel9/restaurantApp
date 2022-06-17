@@ -18,7 +18,7 @@ public class MenuController {
     private MenuService menuService;
 
     @PostMapping
-    public ResponseEntity<MenuDTO> ingresarMesa (@RequestBody MenuDTO menuDTO){
+    public ResponseEntity<MenuDTO> ingresarMenu (@RequestBody MenuDTO menuDTO){
         return new ResponseEntity<>(menuService.ingresarMenu(menuDTO), HttpStatus.CREATED);
     }
     @GetMapping
