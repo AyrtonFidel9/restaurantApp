@@ -7,9 +7,12 @@ import com.restaurante.app.exceptions.RestauranteAppException;
 import com.restaurante.app.mapper.iPedidoMapper;
 import com.restaurante.app.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +42,11 @@ public class PedidoService implements iPedidoService{
     @Override
     public PedidoDTO ingresarPedido(PedidoDTO pedidoDTO) {
         pedidoDTO.setIdRestaurante(1);
+        pedidoDTO.setFecha(LocalDate.now());
+        pedidoDTO.setHora(LocalTime.now());
+
         int idRes = pedidoDTO.getIdRestaurante();
+
         int idUser = pedidoDTO.getIdUsuario();
         Pedido pedido= mapper.toPedido(pedidoDTO);
 
@@ -50,11 +57,24 @@ public class PedidoService implements iPedidoService{
                         new RuntimeException("Restaurante no encontrado"));
         pedido.setRestaurante(res);
 
+        if((pedidoDTO.getHora().isBefore(res.getHoraApertura()) ||
+                pedidoDTO.getHora().isAfter(res.getHoraCierre()))){
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                    "La hora "+ pedidoDTO.getHora() +
+                            " esta fuera de las horas laborables del restaurante");
+        }
+
         // buscar y gurdar el objeto usuario
         Usuario user = usuarioRepository
                 .findById(idUser)
                 .orElseThrow(()->
-                        new RuntimeException("Usuario no encontrado"));
+                        new ResourceNotFoundException("Usuario","id",idUser));
+
+        if (user.getRol() != Rol.mesero){
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                    "El usuario: "+user.getNombre()+" no esta autorizado para realizar esta accion");
+        }
+
         pedido.setUsuario(user);
 
         // buscar y guardar el objeto mesa

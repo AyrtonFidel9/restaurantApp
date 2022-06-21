@@ -16,6 +16,8 @@ public interface iPedidoMapper {
             @Mapping(source = "restaurante.id", target = "idRestaurante"),
             @Mapping(source = "mesas.id", target = "idMesa"),
             @Mapping(source = "usuario.id", target = "idUsuario"),
+            @Mapping(source = "fecha", target = "fecha"),
+            @Mapping(source = "hora", target = "hora"),
             @Mapping(source = "estadoPedido", target = "estadoPedido"),
             @Mapping(source = "detallePedidos", target = "detallePedidos")
     })

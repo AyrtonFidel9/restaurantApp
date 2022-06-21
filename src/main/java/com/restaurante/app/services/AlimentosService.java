@@ -5,10 +5,12 @@ import com.restaurante.app.entity.Alimento;
 import com.restaurante.app.entity.Menu;
 import com.restaurante.app.entity.TipoMenu;
 import com.restaurante.app.exceptions.ResourceNotFoundException;
+import com.restaurante.app.exceptions.RestauranteAppException;
 import com.restaurante.app.mapper.iAlimentoMapper;
 import com.restaurante.app.repository.iAlimentoRepository;
 import com.restaurante.app.repository.iMenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,12 +34,20 @@ public class AlimentosService implements iAlimentoService{
 
         alimento.setDescripcion(alimentoDTO.getDescripcion());
 
-        Menu res = menuRepository
+        Menu menu = menuRepository
                 .findById(alimentoDTO.getIdMenu())
                 .orElseThrow(
-                        () -> new RuntimeException("Menu no encontrado")
+                        () -> new ResourceNotFoundException("Menu", "id",alimentoDTO.getIdMenu())
                 );
         Alimento ingAlimento = alimentoRepository.save(alimento);
+
+        if (alimentoDTO.getTipo().toString().length() <2){
+            throw new RestauranteAppException(HttpStatus.NOT_ACCEPTABLE, "La longuitud del nombre de los alimentos debe ser mayor a 2");
+        }
+
+        if (alimentoDTO.getPrecio()<0){
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST ,"El precio no puede ser negativo");
+        }
 
         return mapper.toAlimentoDTO(ingAlimento);
     }
@@ -81,5 +91,10 @@ public class AlimentosService implements iAlimentoService{
     @Override
     public List<AlimentoDTO> obtenerAlimentoPorTipo(TipoMenu tipo) {
         return null;
+    }
+
+    @Override
+    public List<AlimentoDTO> obtenerAlimentoByIdMenu(int idMenu) {
+        return mapper.toAlimentosDTO(alimentoRepository.findByMenuId(idMenu));
     }
 }

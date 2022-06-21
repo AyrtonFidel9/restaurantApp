@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -19,6 +21,8 @@ public class PedidoController {
 
     @PostMapping
     public ResponseEntity<PedidoDTO> ingresarPedido (@RequestBody PedidoDTO pedidoDTO){
+        //pedidoDTO.setFecha(LocalDate.now());
+        //pedidoDTO.setHora(LocalTime.now());
         return new ResponseEntity<>(pedidoService.ingresarPedido(pedidoDTO), HttpStatus.CREATED);
     }
 
