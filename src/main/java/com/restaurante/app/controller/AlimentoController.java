@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/alimentos")
+@CrossOrigin(origins = "*")
 public class AlimentoController {
     @Autowired
     private AlimentosService alimentosService;
@@ -27,6 +28,11 @@ public class AlimentoController {
     @GetMapping("/{id}")
     public ResponseEntity<AlimentoDTO> getAlimentoById(@PathVariable(name = "id") int id){
         return ResponseEntity.ok(alimentosService.buscarAlimento(id));
+    }
+
+    @GetMapping("/byMenu/{idMenu}")
+    public List<AlimentoDTO> getAlimentoByIdMenu(@PathVariable(name = "idMenu") int id){
+        return alimentosService.obtenerAlimentoByIdMenu(id);
     }
 
     @DeleteMapping("/{id}")

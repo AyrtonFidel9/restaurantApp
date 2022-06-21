@@ -92,4 +92,9 @@ public class AlimentosService implements iAlimentoService{
     public List<AlimentoDTO> obtenerAlimentoPorTipo(TipoMenu tipo) {
         return null;
     }
+
+    @Override
+    public List<AlimentoDTO> obtenerAlimentoByIdMenu(int idMenu) {
+        return mapper.toAlimentosDTO(alimentoRepository.findByMenuId(idMenu));
+    }
 }

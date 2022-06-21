@@ -19,4 +19,6 @@ public interface iAlimentoService {
     AlimentoDTO actualizarAlimento(int idAlimento, AlimentoDTO alimentoDTO);
 
     List<AlimentoDTO> obtenerAlimentoPorTipo(TipoMenu tipo);
+
+    List<AlimentoDTO> obtenerAlimentoByIdMenu(int idMenu);
 }
