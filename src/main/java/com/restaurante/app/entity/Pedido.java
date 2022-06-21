@@ -4,6 +4,8 @@ package com.restaurante.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Entity
@@ -12,7 +14,6 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
-
     @ManyToOne
     @JoinColumn(name="idRestaurante", referencedColumnName = "id")
     @JsonIgnore
@@ -29,12 +30,34 @@ public class Pedido {
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Venta ventas;
 
+    @Column(name = "fechaPedido")
+    private LocalDate fecha;
+
+    @Column(name = "horaPedido")
+    private LocalTime hora;
+
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<DetallePedido> DetallePedidos;
 
     @Enumerated(EnumType.STRING)
     private EstadoPedido estadoPedido;
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
+    }
 
     public int getId() {
         return id;

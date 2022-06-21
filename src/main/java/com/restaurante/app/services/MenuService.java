@@ -38,7 +38,7 @@ public class MenuService implements iMenusService{
         Restaurante res = restauranteRepository
                 .findById(menuDTO.getIdRestaurante())
                 .orElseThrow(()->
-                        new RuntimeException("Restaurante no encontrado"));
+                        new ResourceNotFoundException("Restaurante","id",menuDTO.getIdRestaurante()));
         menu.setRestaurante(res);
 
         Menu ingMenu = menuRepository.save(menu);
