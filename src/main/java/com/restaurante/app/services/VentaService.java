@@ -2,14 +2,13 @@ package com.restaurante.app.services;
 
 import com.restaurante.app.dto.UsuarioDTO;
 import com.restaurante.app.dto.VentaDTO;
-import com.restaurante.app.entity.Pedido;
-import com.restaurante.app.entity.Restaurante;
-import com.restaurante.app.entity.Usuario;
-import com.restaurante.app.entity.Venta;
+import com.restaurante.app.entity.*;
 import com.restaurante.app.exceptions.ResourceNotFoundException;
+import com.restaurante.app.exceptions.RestauranteAppException;
 import com.restaurante.app.mapper.iVentaMapper;
 import com.restaurante.app.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,19 +35,28 @@ public class VentaService implements iVentaService {
     public VentaDTO ingresarVenta(VentaDTO ventaDTO)
     {
         ventaDTO.setIdRestaurante(1);
+        ventaDTO.setImpuestos(BigDecimal.valueOf(0.12));
         int idRes = ventaDTO.getIdRestaurante();
         int idUser = ventaDTO.getIdUsuario();
         int idP = ventaDTO.getIdPedido();
         Venta venta = mapper.toVenta(ventaDTO);
 
-        Usuario user = usuarioRepository.findById(idUser).
-                orElseThrow(()->
-                        new RuntimeException("Usuario no encontrado"));
+        Usuario user = usuarioRepository
+                .findById(idUser)
+                .orElseThrow(()->
+                        new ResourceNotFoundException("Usuario","id",idUser));
+        if (user.getRol() != Rol.cliente){
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                    "El usuario: "+user.getNombre()+" no esta autorizado para realizar esta accion");
+        }
         venta.setUsuario(user);
 
         Pedido pedido = pedidoRepository.findById(idP).orElseThrow(()->
                 new RuntimeException("Pedido no encontrado"));
-
+        if(pedido.getEstadoPedido() != EstadoPedido.entregado) {
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,"El pedido: "+ pedido.getId() +" se encuentra " +
+                    pedido.getEstadoPedido() + " y necesita ser entregado");
+        }
         venta.setPedido(pedido);
 
         Restaurante res = restauranteRepository.findById(idRes).
@@ -56,8 +64,16 @@ public class VentaService implements iVentaService {
                         new RuntimeException("Restaurante no encontrado"));
         venta.setRestaurante(res);
 
-        venta.setTotal(obtenerTotal(ventaDTO));
+        if(ventaDTO.getHora().isBefore(res.getHoraApertura()) ||
+                ventaDTO.getHora().isAfter(res.getHoraApertura())){
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                    "La hora "+ ventaDTO.getHora() +
+                            " esta fuera de las horas laborables del restaurante");
+        }
 
+
+
+        venta.setTotal(obtenerTotal(ventaDTO));
         Venta igventa = ventaRepository.save(venta);
         return mapper.toVentaDTO(igventa);
     }
@@ -72,14 +88,21 @@ public class VentaService implements iVentaService {
     @Override
     public VentaDTO actualizarVenta(int idVenta, VentaDTO ventaDTO)
     {
+        Venta vantigua = ventaRepository.findById(idVenta)
+                .orElseThrow(()-> new ResourceNotFoundException("Venta","id",ventaDTO.getIdVenta()));
+        ingresarVenta(ventaDTO);
+        return null;
+        /*
         Venta venta = mapper.toVenta(buscarVenta(idVenta));
         venta.setFormaDePago(ventaDTO.getFormaDePago());
         venta.setFecha(ventaDTO.getFecha());
+        venta.setHora(ventaDTO.getHora());
         venta.setCalificacion(ventaDTO.getCalificacion());
         venta.setPropina(ventaDTO.getPropina());
         venta.setTotal(ventaDTO.getTotal());
         ventaRepository.save(venta);
         return mapper.toVentaDTO(venta);
+        */
     }
 
     @Override

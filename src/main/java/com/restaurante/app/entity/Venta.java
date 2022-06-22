@@ -3,6 +3,7 @@ package com.restaurante.app.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "Ventas")
@@ -27,6 +28,9 @@ public class Venta {
     private TipoPago formaDePago;
 
     private LocalDate fecha;
+
+    private LocalTime hora;
+
 
     @Enumerated(EnumType.STRING)
     private Calificacion calificacion;
@@ -83,6 +87,14 @@ public class Venta {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
     }
 
     public Calificacion getCalificacion() {
