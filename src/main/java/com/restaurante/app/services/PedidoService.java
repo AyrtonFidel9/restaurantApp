@@ -81,7 +81,7 @@ public class PedidoService implements iPedidoService{
         Mesa mesa = mesaRepository
                 .findById(pedidoDTO.getIdMesa())
                 .orElseThrow(()->
-                        new RuntimeException("Mesa no encontrada"));
+                        new ResourceNotFoundException("Mesa","id",pedidoDTO.getIdMesa()));
         pedido.setMesas(mesa);
 
         // Ingresar los detalles que forman parte del pedido
@@ -90,14 +90,19 @@ public class PedidoService implements iPedidoService{
                 .getDetallePedidos()
                 .stream()
                 .map(detallePedido -> {
-                    System.out.println("----------> "+detallePedido.getIdAlimento());
+                    //System.out.println("----------> "+detallePedido.getIdAlimento());
                     Alimento alimento = alimentoRepository.findById(detallePedido.getIdAlimento())
                             .orElseThrow(() -> new ResourceNotFoundException("Alimento","id",detallePedido.getIdAlimento()));
-                    System.out.println("LLLLEEEGUEEEEE");
+                    //System.out.println("LLLLEEEGUEEEEE");
                     DetallePedido detallarPedido = new DetallePedido();
                     detallarPedido.setAlimentos(alimento);
                     detallarPedido.setPedido(pedido);
-                    System.out.println(detallePedido.getCantidadAlimento());
+                    //System.out.println(detallePedido.getCantidadAlimento());
+
+                    if (detallePedido.getCantidadAlimento() < 1){
+                        throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "La cantidad de alimetos debe ser al menos 1");
+                    }
+
                     detallarPedido.setCantidadAlimento(detallePedido.getCantidadAlimento());
                     detallarPedido.setSubtotal(
                             BigDecimal.valueOf(alimento.getPrecio() * detallarPedido.getCantidadAlimento())
@@ -128,12 +133,11 @@ public class PedidoService implements iPedidoService{
 
     @Override
     public PedidoDTO actualizarPedido(int idPedido, PedidoDTO pedidoDTO) {
-        Pedido antiguo = pedidoRepository
-                .findById(idPedido)
-                .orElseThrow(()->
-                        new RuntimeException("Pedido no encontrado"));
-        ingresarPedido(pedidoDTO);
 
-        return null;
+        Pedido pedido = mapper.toPedido(buscarPedido(idPedido));
+
+        pedido.setEstadoPedido(pedidoDTO.getEstadoPedido());
+
+        return mapper.toPedidoDTO(pedidoRepository.save(pedido));
     }
 }
