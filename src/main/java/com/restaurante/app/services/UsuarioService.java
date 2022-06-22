@@ -4,10 +4,13 @@ import com.restaurante.app.dto.UsuarioDTO;
 import com.restaurante.app.entity.Pedido;
 import com.restaurante.app.entity.Restaurante;
 import com.restaurante.app.entity.Usuario;
+import com.restaurante.app.exceptions.ResourceNotFoundException;
+import com.restaurante.app.exceptions.RestauranteAppException;
 import com.restaurante.app.mapper.iUsuarioMapper;
 import com.restaurante.app.repository.iRestauranteRepository;
 import com.restaurante.app.repository.iUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,11 +35,61 @@ public class UsuarioService implements iUsuarioService{
         int idRes = usuarioDTO.getIdRestaurante();
         Usuario usuario = mapper.toUsuario(usuarioDTO);
 
-        Restaurante res = restauranteRepository.findById(idRes).orElseThrow(()->new RuntimeException("Restaurante no encontrado"));
+        Restaurante res = restauranteRepository.findById(idRes).orElseThrow(()->
+                new ResourceNotFoundException("Restaurante","id",idRes));
         usuario.setRestaurante(res);
 
-        Usuario ingUsuario = usuarioRepository.save(usuario);
-        return mapper.toUsuarioDTO(ingUsuario);
+        if(validadorDeCedula(usuario.getCedula())) {
+            Usuario ingUsuario = usuarioRepository.save(usuario);
+            return mapper.toUsuarioDTO(ingUsuario);
+        }
+        else
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,"Cedula no valida");
+    }
+
+    static boolean validadorDeCedula(String cedula) {
+        boolean cedulaCorrecta = false;
+        try {
+            if (cedula.length() == 10) // ConstantesApp.LongitudCedula
+            {
+                int tercerDigito = Integer.parseInt(cedula.substring(2, 3));
+                if (tercerDigito < 6) {
+                    // Coeficientes de validación cédula
+                    // El decimo digito se lo considera dígito verificador
+                    int[] coefValCedula = { 2, 1, 2, 1, 2, 1, 2, 1, 2 };
+                    int verificador = Integer.parseInt(cedula.substring(9,10));
+                    int suma = 0;
+                    int digito = 0;
+                    for (int i = 0; i < (cedula.length() - 1); i++) {
+                        digito = Integer.parseInt(cedula.substring(i, i + 1))* coefValCedula[i];
+                        suma += ((digito % 10) + (digito / 10));
+                    }
+
+                    if ((suma % 10 == 0) && (suma % 10 == verificador)) {
+                        cedulaCorrecta = true;
+                    }
+                    else if ((10 - (suma % 10)) == verificador) {
+                        cedulaCorrecta = true;
+                    } else {
+                        cedulaCorrecta = false;
+                    }
+                } else {
+                    cedulaCorrecta = false;
+                }
+            } else {
+                cedulaCorrecta = false;
+            }
+        } catch (NumberFormatException nfe) {
+            cedulaCorrecta = false;
+        } catch (Exception err) {
+            System.out.println("Una excepción ocurrió en el proceso de validación");
+            cedulaCorrecta = false;
+        }
+
+        if (!cedulaCorrecta) {
+            System.out.println("La Cédula ingresada es Incorrecta");
+        }
+        return cedulaCorrecta;
     }
 
     @Override
@@ -44,7 +97,7 @@ public class UsuarioService implements iUsuarioService{
         Optional<Usuario> usuarioResult = usuarioRepository.findById(idUsuario);
         return mapper.toUsuarioDTO(usuarioResult
                 .orElseThrow(()->
-                        new RuntimeException("Usuario no encontrado")));
+                        new ResourceNotFoundException("Usuario","id",idUsuario)));
     }
 
     @Override

@@ -2,22 +2,40 @@ package com.restaurante.app.dto;
 
 import com.restaurante.app.entity.Rol;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class UsuarioDTO {
 
     private int idUsuario;
-
+    @NotNull(message = "El restaurante es requerido")
+    @Min(value=1)
     private int idRestaurante;
-
+    @NotNull(message = "Debe ingresar el nombre del usuario")
+    @NotBlank(message = "Se necesita el nombre del usuario")
+    @NotEmpty
     private String nombre;
-
+    @NotNull(message = "Debe ingresar el apellido del usuario")
+    @NotBlank(message = "Se necesita el apellido del usuario")
+    @NotEmpty
     private String apellido;
-
+    @NotNull(message = "Debe ingresar la cedula del usuario")
+    @NotBlank(message = "Se necesita la cedula del usuario")
+    @NotEmpty
     private String cedula;
-
+    @NotNull(message = "Debe ingresar el correo del usuario")
+    @NotBlank(message = "Se necesita el correo del usuario")
+    @NotEmpty
     private String email;
-
+    @NotNull(message = "Debe ingresar la clave")
+    @NotBlank(message = "Se necesita la clave")
+    @NotEmpty
     private String password;
-
+    @NotNull(message = "Debe ingresar el rol")
+    @NotBlank(message = "Se necesita el rol")
+    @NotEmpty
     private Rol rol;
 
     public int getIdUsuario() {
