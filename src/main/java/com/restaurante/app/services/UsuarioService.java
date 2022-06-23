@@ -3,6 +3,7 @@ package com.restaurante.app.services;
 import com.restaurante.app.dto.UsuarioDTO;
 import com.restaurante.app.entity.Pedido;
 import com.restaurante.app.entity.Restaurante;
+import com.restaurante.app.entity.Rol;
 import com.restaurante.app.entity.Usuario;
 import com.restaurante.app.exceptions.ResourceNotFoundException;
 import com.restaurante.app.exceptions.RestauranteAppException;
@@ -11,10 +12,17 @@ import com.restaurante.app.repository.iRestauranteRepository;
 import com.restaurante.app.repository.iUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UsuarioService implements iUsuarioService{
@@ -28,11 +36,19 @@ public class UsuarioService implements iUsuarioService{
     @Autowired
     private iUsuarioMapper mapper;
 
+/*
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+ */
+
+
     @Override
     public UsuarioDTO ingresarUsuario(UsuarioDTO usuarioDTO)
     {
         usuarioDTO.setIdRestaurante(1);
         int idRes = usuarioDTO.getIdRestaurante();
+        usuarioDTO.setPassword(new BCryptPasswordEncoder().encode(usuarioDTO.getPassword()));
         Usuario usuario = mapper.toUsuario(usuarioDTO);
 
         Restaurante res = restauranteRepository.findById(idRes).orElseThrow(()->
@@ -123,4 +139,14 @@ public class UsuarioService implements iUsuarioService{
         return mapper.toUsuarioDTO((List<Usuario>)usuarioRepository.findAll());
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Usuario usuario = new Usuario();
+        List<GrantedAuthority> roles = new ArrayList<>();
+        for(Rol r : Rol.values())
+            roles.add(new SimpleGrantedAuthority(r.name()));
+        System.out.println("roles = " + roles);
+        UserDetails userD = new User(usuario.getNombre(),usuario.getPassword(), roles );
+        return userD;
+    }
 }
