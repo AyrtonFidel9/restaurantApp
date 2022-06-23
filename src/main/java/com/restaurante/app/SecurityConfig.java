@@ -1,5 +1,6 @@
 package com.restaurante.app;
 
+import com.restaurante.app.seguridad.CustomUserService;
 import com.restaurante.app.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,10 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UsuarioService userDetailsService;
+    private CustomUserService userDetailsService;
 
 
     @Bean
@@ -35,18 +38,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
-        http.authorizeRequests().
+        http.csrf().disable().authorizeRequests().antMatchers("/api/usuarios").permitAll().
                 anyRequest()
                 .authenticated()
                 .and()
                 .httpBasic();
     }
 
-
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
 
 }

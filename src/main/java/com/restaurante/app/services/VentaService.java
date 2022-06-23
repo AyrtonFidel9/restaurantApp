@@ -45,7 +45,7 @@ public class VentaService implements iVentaService {
                 .findById(idUser)
                 .orElseThrow(()->
                         new ResourceNotFoundException("Usuario","id",idUser));
-        if (user.getRol() != Rol.cliente){
+        if (user.getRol() != Rol.ROLE_CAJERO){
             throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
                     "El usuario: "+user.getNombre()+" no esta autorizado para realizar esta accion");
         }

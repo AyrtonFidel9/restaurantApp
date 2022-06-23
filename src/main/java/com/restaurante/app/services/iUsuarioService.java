@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface iUsuarioService extends UserDetailsService  {
+public interface iUsuarioService {
     UsuarioDTO ingresarUsuario(UsuarioDTO usuarioDTO);
     UsuarioDTO actualizarUsuario(int idUsuario, UsuarioDTO usuarioDTO);
     UsuarioDTO buscarUsuario(int idUsuario);

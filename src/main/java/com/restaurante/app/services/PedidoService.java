@@ -70,7 +70,7 @@ public class PedidoService implements iPedidoService{
                 .orElseThrow(()->
                         new ResourceNotFoundException("Usuario","id",idUser));
 
-        if (user.getRol() != Rol.mesero){
+        if (user.getRol() != Rol.ROLE_MESERO){
             throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
                     "El usuario: "+user.getNombre()+" no esta autorizado para realizar esta accion");
         }

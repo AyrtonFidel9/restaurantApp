@@ -36,11 +36,10 @@ public class UsuarioService implements iUsuarioService{
     @Autowired
     private iUsuarioMapper mapper;
 
-/*
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
- */
 
 
     @Override
@@ -48,7 +47,7 @@ public class UsuarioService implements iUsuarioService{
     {
         usuarioDTO.setIdRestaurante(1);
         int idRes = usuarioDTO.getIdRestaurante();
-        usuarioDTO.setPassword(new BCryptPasswordEncoder().encode(usuarioDTO.getPassword()));
+        usuarioDTO.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
         Usuario usuario = mapper.toUsuario(usuarioDTO);
 
         Restaurante res = restauranteRepository.findById(idRes).orElseThrow(()->
@@ -139,14 +138,4 @@ public class UsuarioService implements iUsuarioService{
         return mapper.toUsuarioDTO((List<Usuario>)usuarioRepository.findAll());
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = new Usuario();
-        List<GrantedAuthority> roles = new ArrayList<>();
-        for(Rol r : Rol.values())
-            roles.add(new SimpleGrantedAuthority(r.name()));
-        System.out.println("roles = " + roles);
-        UserDetails userD = new User(usuario.getNombre(),usuario.getPassword(), roles );
-        return userD;
-    }
 }
