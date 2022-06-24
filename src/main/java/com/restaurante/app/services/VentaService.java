@@ -1,6 +1,5 @@
 package com.restaurante.app.services;
 
-import com.restaurante.app.dto.UsuarioDTO;
 import com.restaurante.app.dto.VentaDTO;
 import com.restaurante.app.entity.*;
 import com.restaurante.app.exceptions.ResourceNotFoundException;
