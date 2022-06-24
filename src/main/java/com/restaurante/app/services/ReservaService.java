@@ -166,9 +166,9 @@ public class ReservaService implements iReservaService{
     * */
 
     @Override
-    public Set<ReservaMesa> createListReservasMesas(Reserva reservas, ReservaDTO reservaDTO, LocalTime horaActual, LocalDate fechaActual) {
+    public Set<ReservaMesa> createListReservasMesas(Reserva reserva, ReservaDTO reservaDTO, LocalTime horaActual, LocalDate fechaActual) {
 
-        Set<ReservaMesa> reservasMesaDAO = reservaMesaRepository.findReservaMesaById_IdReserva(reservaDTO.getIdReserva());
+        /*Set<ReservaMesa> reservasMesaDAO = reservaMesaRepository.findReservaMesaById_IdReserva(reservaDTO.getIdReserva());
 
         Reserva res = new Reserva();
         //nota, solo para optmizar desarrollo proyecto deber, recurrente OJO
@@ -178,7 +178,7 @@ public class ReservaService implements iReservaService{
             res = reservaRepository.save(reservas);
         }
 
-        final Reserva reserva = res;
+        final Reserva reserva = res;*/
         Set<ReservaMesa> listReservaMesa = Collections.EMPTY_SET;
         listReservaMesa = reservaDTO
                 .getReservaMesas()
@@ -199,7 +199,8 @@ public class ReservaService implements iReservaService{
                     }*/
 
                     Set<ReservaMesa> setReservas =
-                            reservaMesaRepository.findReservaMesaByFechaAndHoraAfter(fechaActual,horaActual);
+                            reservaMesaRepository
+                                    .findReservaMesaByFechaGreaterThanEqualAndHoraGreaterThanEqual(fechaActual,horaActual);
 
                     System.out.println(setReservas.toString());
 
@@ -229,6 +230,36 @@ public class ReservaService implements iReservaService{
                             }
                         });
                     }
+
+                    Set<ReservaMesa> reservasMesaTotal = reservaMesaRepository
+                            .findReservaMesaById_IdMesaAndFechaGreaterThanEqualAndHoraGreaterThanEqual(
+                                    mesa.getId(),fechaActual, horaActual);
+
+                    reservasMesaTotal.stream().forEach(resmes->{
+                        if(resmes.getId().getIdMesa() == mesa.getId())
+                        {
+                            if(resmes.getFecha().isEqual(reserva.getFecha())){
+
+                                Reserva oneReserva = reservaRepository
+                                        .findById(resmes.getId().getIdReserva())
+                                        .orElseThrow();
+                                LocalTime horaInicio = resmes.getHora();
+                                LocalTime horaFin = horaInicio.plusMinutes(
+                                        (long) oneReserva.getDuracion());
+
+                                if(reserva.getHora().isAfter(horaInicio) &&
+                                    reserva.getHora().isBefore(horaFin) || (
+                                            reserva.getHora().equals(horaInicio)
+                                        )){
+                                    throw new RestauranteAppException(
+                                            HttpStatus.BAD_REQUEST, "La mesa "+mesa.getNombre()+" ya se encuentra reservada entre "+
+                                            horaInicio +" - "+horaFin+" por el usuario: "+oneReserva.getUsuario().getNombre()
+                                    );
+                                }
+                            }
+                        }
+                    });
+
                     //actualizar el estado de la mesa
                     //mesa.setEstado(true);
                     System.out.println(mesa.toString());

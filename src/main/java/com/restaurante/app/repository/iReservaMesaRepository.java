@@ -9,8 +9,8 @@ import java.time.LocalTime;
 import java.util.Set;
 
 public interface iReservaMesaRepository extends CrudRepository<ReservaMesa, ReservaMesaKey> {
-    Set<ReservaMesa> findReservaMesaByFechaAndHoraAfter(LocalDate fecha, LocalTime hora);
+    Set<ReservaMesa> findReservaMesaByFechaGreaterThanEqualAndHoraGreaterThanEqual(LocalDate fecha, LocalTime hora);
     ReservaMesa findReservaMesaById_IdReservaAndId_IdMesa(int idReserva, int idMesa);
-    
+    Set<ReservaMesa> findReservaMesaById_IdMesaAndFechaGreaterThanEqualAndHoraGreaterThanEqual(int idMesa, LocalDate fecha, LocalTime hora);
     Set<ReservaMesa> findReservaMesaById_IdReserva(int idReserva);
 }
