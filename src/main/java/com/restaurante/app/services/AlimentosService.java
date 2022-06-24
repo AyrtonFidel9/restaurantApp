@@ -83,9 +83,12 @@ public class AlimentosService implements iAlimentoService{
 
     @Override
     public AlimentoDTO actualizarAlimento(int idAlimento, AlimentoDTO alimentoDTO) {
-        AlimentoDTO alimentoEncontrado = buscarAlimento(idAlimento);
-        alimentoEncontrado = alimentoDTO;
-        return mapper.toAlimentoDTO(alimentoRepository.save(mapper.toAlimento(alimentoEncontrado)));
+        if (alimentoRepository.existsById(idAlimento)){
+            alimentoDTO.setIdAlimento(idAlimento);
+            return ingresarAlimento(alimentoDTO);
+        }else{
+            throw new ResourceNotFoundException("Alimento", "id", idAlimento);
+        }
     }
 
     @Override

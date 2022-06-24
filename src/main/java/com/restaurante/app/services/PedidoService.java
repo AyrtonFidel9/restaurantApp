@@ -128,12 +128,11 @@ public class PedidoService implements iPedidoService{
 
     @Override
     public PedidoDTO actualizarPedido(int idPedido, PedidoDTO pedidoDTO) {
-        Pedido antiguo = pedidoRepository
-                .findById(idPedido)
-                .orElseThrow(()->
-                        new RuntimeException("Pedido no encontrado"));
-        ingresarPedido(pedidoDTO);
-
-        return null;
+        if (pedidoRepository.existsById(idPedido)){
+            pedidoDTO.setIdPedido(idPedido);
+            return ingresarPedido(pedidoDTO);
+        }else{
+            throw new ResourceNotFoundException("Pedido", "id", idPedido);
+        }
     }
 }
