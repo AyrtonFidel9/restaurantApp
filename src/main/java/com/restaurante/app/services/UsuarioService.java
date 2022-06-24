@@ -118,15 +118,14 @@ public class UsuarioService implements iUsuarioService{
     @Override
     public UsuarioDTO actualizarUsuario(int idUsuario,UsuarioDTO usuarioDTO)
     {
-        Usuario usuarioex = mapper.toUsuario(buscarUsuario(idUsuario)); //comprueba si existe el usuario
-        usuarioex.setNombre(usuarioDTO.getNombre());
-        usuarioex.setApellido(usuarioDTO.getApellido());
-        usuarioex.setCedula(usuarioDTO.getCedula());
-        usuarioex.setEmail(usuarioDTO.getEmail());
-        usuarioex.setPassword(usuarioDTO.getPassword());
-        usuarioex.setRol(usuarioDTO.getRol());
-        usuarioRepository.save(usuarioex);
-        return mapper.toUsuarioDTO(usuarioex);
+        if(usuarioRepository.existsById(idUsuario))
+        {
+            usuarioDTO.setIdUsuario(idUsuario);
+            return ingresarUsuario(usuarioDTO);
+        }
+        else{
+            throw new ResourceNotFoundException("Usuario","id",idUsuario);
+        }
     }
     @Override
     public void eliminarUsuario(int idUsuario) {

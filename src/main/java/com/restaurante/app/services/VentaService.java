@@ -7,11 +7,14 @@ import com.restaurante.app.exceptions.ResourceNotFoundException;
 import com.restaurante.app.exceptions.RestauranteAppException;
 import com.restaurante.app.mapper.iVentaMapper;
 import com.restaurante.app.repository.*;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +39,8 @@ public class VentaService implements iVentaService {
     {
         ventaDTO.setIdRestaurante(1);
         ventaDTO.setImpuestos(BigDecimal.valueOf(0.12));
+        ventaDTO.setFecha(LocalDate.now());
+        ventaDTO.setHora(LocalTime.now());
         int idRes = ventaDTO.getIdRestaurante();
         int idUser = ventaDTO.getIdUsuario();
         int idP = ventaDTO.getIdPedido();
@@ -88,11 +93,21 @@ public class VentaService implements iVentaService {
     @Override
     public VentaDTO actualizarVenta(int idVenta, VentaDTO ventaDTO)
     {
+        if(ventaRepository.existsById(idVenta))
+        {
+            ventaDTO.setIdUsuario(idVenta);
+            return ingresarVenta(ventaDTO);
+        }
+        else{
+            throw new ResourceNotFoundException("Usuario","id",idVenta);
+        }
+        /*
         Venta vantigua = ventaRepository.findById(idVenta)
                 .orElseThrow(()-> new ResourceNotFoundException("Venta","id",ventaDTO.getIdVenta()));
-        ingresarVenta(ventaDTO);
+        vantigua.setId(idVenta);
+        ingresarVenta(mapper.toVentaDTO(vantigua));
         return null;
-        /*
+
         Venta venta = mapper.toVenta(buscarVenta(idVenta));
         venta.setFormaDePago(ventaDTO.getFormaDePago());
         venta.setFecha(ventaDTO.getFecha());

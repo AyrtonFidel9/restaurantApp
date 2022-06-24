@@ -21,10 +21,9 @@ public class VentaDTO {
     private int idPedido;
     private int idRestaurante;
     @NotNull(message = "Debe ingresar el tipo de pago")
-    @NotBlank(message = "Se necesita el tipo de pago")
+    @NotBlank
     @NotEmpty
     private TipoPago formaDePago;
-    @DateTimeFormat(pattern="dd-MM-yyyy")
     @NotNull(message = "El campo fecha es requerido")
     private LocalDate fecha;
     @DateTimeFormat(pattern = "HH:mm")
