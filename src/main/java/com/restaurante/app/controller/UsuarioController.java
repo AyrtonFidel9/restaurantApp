@@ -14,12 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
+@CrossOrigin(origins = "*")
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> ingresarUsuario(@RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity<UsuarioDTO> ingresarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
         return new ResponseEntity<>(usuarioService.ingresarUsuario(usuarioDTO), HttpStatus.CREATED);
     }
 

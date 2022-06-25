@@ -87,7 +87,7 @@ public class PedidoService implements iPedidoService{
                 .orElseThrow(()->
                         new ResourceNotFoundException("Usuario","id",idUser));
 
-        if (user.getRol() != Rol.mesero){
+        if (user.getRol() != Rol.ROLE_MESERO){
             throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
                     "El usuario: "+user.getNombre()+" no esta autorizado para realizar esta accion");
         }
@@ -99,6 +99,7 @@ public class PedidoService implements iPedidoService{
                 .orElseThrow(()->
                         new ResourceNotFoundException("Mesa","id",pedidoDTO.getIdMesa()));
         pedido.setMesas(mesa);
+
 
         if (pedidoDTO.getDetallePedidos() != null){
             // Ingresar los detalles que forman parte del pedido
@@ -130,7 +131,7 @@ public class PedidoService implements iPedidoService{
         }else {
             pedido.setDetallePedidos(detallePedidos);
         }
-        
+
         pedidoRepository.save(pedido);
         return mapper.toPedidoDTO(pedido);
     }

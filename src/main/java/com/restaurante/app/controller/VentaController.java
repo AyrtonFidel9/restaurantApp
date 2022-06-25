@@ -13,12 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/venta")
+@CrossOrigin(origins = "*")
 public class VentaController {
     @Autowired
     private VentaService ventaService;
 
     @PostMapping
-    public ResponseEntity<VentaDTO> ingresarVenta(@RequestBody VentaDTO ventaDTO)
+    public ResponseEntity<VentaDTO> ingresarVenta(@RequestBody @Valid VentaDTO ventaDTO)
     {
         return new ResponseEntity<>(ventaService.ingresarVenta(ventaDTO), HttpStatus.CREATED);
     }
@@ -35,7 +36,7 @@ public class VentaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VentaDTO>actualizarVenta(@PathVariable(name = "id") int id, @RequestBody @Valid VentaDTO ventaDTO)
+    public ResponseEntity<VentaDTO>actualizarVenta(@PathVariable(name = "id") int id, @RequestBody @Valid  VentaDTO ventaDTO)
     {
         VentaDTO venta = ventaService.actualizarVenta(id, ventaDTO);
         return new ResponseEntity<>(venta,HttpStatus.OK);

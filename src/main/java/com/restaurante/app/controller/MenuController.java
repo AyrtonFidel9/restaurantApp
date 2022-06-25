@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.restaurante.app.dto.MesaDTO;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class MenuController {
     private MenuService menuService;
 
     @PostMapping
-    public ResponseEntity<MenuDTO> ingresarMenu (@RequestBody MenuDTO menuDTO){
+    public ResponseEntity<MenuDTO> ingresarMenu (@RequestBody @Valid MenuDTO menuDTO){
         return new ResponseEntity<>(menuService.ingresarMenu(menuDTO), HttpStatus.CREATED);
     }
     @GetMapping
@@ -38,7 +39,7 @@ public class MenuController {
 
     @PutMapping("/{id}")
     public ResponseEntity<MenuDTO> actualizarMenu (@PathVariable(name = "id") int id,
-                                                   @RequestBody MenuDTO menuDTO){
+                                                   @RequestBody @Valid MenuDTO menuDTO){
         MenuDTO menuDTOresp = menuService.actualizarMenu(id, menuDTO);
         return new ResponseEntity<>(menuDTOresp,HttpStatus.OK);
     }
