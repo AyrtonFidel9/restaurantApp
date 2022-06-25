@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -37,11 +38,18 @@ public class PedidoService implements iPedidoService{
     private iPedidoRepository pedidoRepository;
 
     @Autowired
+    private iDetallePedidoRepository detallePedidoRepository;
+
+    @Autowired
     private iPedidoMapper mapper;
 
     @Override
     public PedidoDTO ingresarPedido(PedidoDTO pedidoDTO) {
+
+        Set<DetallePedido> detallePedidos = null;
+        
         pedidoDTO.setIdRestaurante(1);
+
         pedidoDTO.setFecha(LocalDate.now());
         pedidoDTO.setHora(LocalTime.now());
 
@@ -49,7 +57,16 @@ public class PedidoService implements iPedidoService{
 
         int idUser = pedidoDTO.getIdUsuario();
         Pedido pedido= mapper.toPedido(pedidoDTO);
-
+        
+        if (pedidoDTO.getIdPedido() != 0) {
+            if (pedidoDTO.getDetallePedidos() != null) {
+                detallePedidoRepository.eliminar(pedidoDTO.getIdPedido());
+            } else {
+                detallePedidos = detallePedidoRepository.pedidosbyid(pedidoDTO.getIdPedido());
+            }
+        }
+        
+        
         // buscar y guardar el objeto restaurante
         Restaurante res = restauranteRepository
                 .findById(idRes)
@@ -74,7 +91,6 @@ public class PedidoService implements iPedidoService{
             throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
                     "El usuario: "+user.getNombre()+" no esta autorizado para realizar esta accion");
         }
-
         pedido.setUsuario(user);
 
         // buscar y guardar el objeto mesa
@@ -84,33 +100,37 @@ public class PedidoService implements iPedidoService{
                         new ResourceNotFoundException("Mesa","id",pedidoDTO.getIdMesa()));
         pedido.setMesas(mesa);
 
-        // Ingresar los detalles que forman parte del pedido
-        Set<DetallePedido> listDetallePedido = Collections.EMPTY_SET;
-        listDetallePedido = pedidoDTO
-                .getDetallePedidos()
-                .stream()
-                .map(detallePedido -> {
-                    //System.out.println("----------> "+detallePedido.getIdAlimento());
-                    Alimento alimento = alimentoRepository.findById(detallePedido.getIdAlimento())
-                            .orElseThrow(() -> new ResourceNotFoundException("Alimento","id",detallePedido.getIdAlimento()));
-                    //System.out.println("LLLLEEEGUEEEEE");
-                    DetallePedido detallarPedido = new DetallePedido();
-                    detallarPedido.setAlimentos(alimento);
-                    detallarPedido.setPedido(pedido);
-                    //System.out.println(detallePedido.getCantidadAlimento());
+        if (pedidoDTO.getDetallePedidos() != null){
+            // Ingresar los detalles que forman parte del pedido
+            Set<DetallePedido> listDetallePedido = Collections.EMPTY_SET;
+            listDetallePedido = pedidoDTO
+                    .getDetallePedidos()
+                    .stream()
+                    .map(detallePedido -> {
 
-                    if (detallePedido.getCantidadAlimento() < 1){
-                        throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "La cantidad de alimetos debe ser al menos 1");
-                    }
+                        Alimento alimento = alimentoRepository.findById(detallePedido.getIdAlimento())
+                                .orElseThrow(() -> new ResourceNotFoundException("Alimento","id",detallePedido.getIdAlimento()));
 
-                    detallarPedido.setCantidadAlimento(detallePedido.getCantidadAlimento());
-                    detallarPedido.setSubtotal(
-                            BigDecimal.valueOf(alimento.getPrecio() * detallarPedido.getCantidadAlimento())
-                    );
-                    return detallarPedido;
-                }).collect(Collectors.toSet());
-        pedido.setDetallePedidos(listDetallePedido);
+                        DetallePedido detallarPedido = new DetallePedido();
+                        detallarPedido.setAlimentos(alimento);
+                        detallarPedido.setPedido(pedido);
+                        //System.out.println(detallePedido.getCantidadAlimento());
 
+                        if (detallePedido.getCantidadAlimento() < 1){
+                            throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "La cantidad de alimetos debe ser al menos 1");
+                        }
+
+                        detallarPedido.setCantidadAlimento(detallePedido.getCantidadAlimento());
+                        detallarPedido.setSubtotal(
+                                BigDecimal.valueOf(alimento.getPrecio() * detallarPedido.getCantidadAlimento())
+                        );
+                        return detallarPedido;
+                    }).collect(Collectors.toSet());
+            pedido.setDetallePedidos(listDetallePedido);
+        }else {
+            pedido.setDetallePedidos(detallePedidos);
+        }
+        
         pedidoRepository.save(pedido);
         return mapper.toPedidoDTO(pedido);
     }
@@ -133,11 +153,19 @@ public class PedidoService implements iPedidoService{
 
     @Override
     public PedidoDTO actualizarPedido(int idPedido, PedidoDTO pedidoDTO) {
+        if (pedidoRepository.existsById(idPedido)){
+            pedidoDTO.setIdPedido(idPedido);
+            return ingresarPedido(pedidoDTO);
+        }else
+            throw new ResourceNotFoundException("Pedido" , "id", idPedido);
+    }
 
-        Pedido pedido = mapper.toPedido(buscarPedido(idPedido));
-
-        pedido.setEstadoPedido(pedidoDTO.getEstadoPedido());
-
-        return mapper.toPedidoDTO(pedidoRepository.save(pedido));
+    @Override
+    public PedidoDTO actualizarEstado(int idPedido, EstadoPedido estadoPedido) {
+        if (pedidoRepository.existsById(idPedido)){
+            pedidoRepository.actualizarEstado(idPedido,estadoPedido);
+            return buscarPedido(idPedido);
+        }else
+            throw new ResourceNotFoundException("Pedido", "id", idPedido);
     }
 }
