@@ -3,6 +3,8 @@ package com.restaurante.app.services;
 import com.restaurante.app.dto.ReservaDTO;
 import com.restaurante.app.entity.ReservaMesa;
 import com.restaurante.app.entity.Reserva;
+import com.restaurante.app.entity.Restaurante;
+import com.restaurante.app.entity.Usuario;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,7 +17,6 @@ public interface iReservaService {
     void eliminarReserva (int idReserva);
     ReservaDTO buscarReserva (int idReserva);
     List<ReservaDTO> listarReservas ();
-
-    Set<ReservaMesa> createListReservasMesas (Reserva reserva,ReservaDTO reservaDTO, LocalTime horaActual, LocalDate fechaActual);
+    Set<ReservaMesa> createListReservasMesas (Reserva reserva,ReservaDTO reservaDTO);
 
 }

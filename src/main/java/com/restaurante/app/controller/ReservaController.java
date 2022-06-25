@@ -1,7 +1,6 @@
 package com.restaurante.app.controller;
 
 import com.restaurante.app.dto.ReservaDTO;
-import com.restaurante.app.dto.ReservaMesaDTO;
 import com.restaurante.app.services.ReservaMesaService;
 import com.restaurante.app.services.ReservaService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,5 @@
 package com.restaurante.app.controller;
 
-import com.restaurante.app.dto.MenuDTO;
 import com.restaurante.app.dto.PedidoDTO;
 import com.restaurante.app.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController
