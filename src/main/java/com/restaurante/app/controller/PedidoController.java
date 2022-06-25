@@ -2,6 +2,8 @@ package com.restaurante.app.controller;
 
 import com.restaurante.app.dto.MenuDTO;
 import com.restaurante.app.dto.PedidoDTO;
+import com.restaurante.app.entity.EstadoPedido;
+import com.restaurante.app.exceptions.RestauranteAppException;
 import com.restaurante.app.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,15 @@ public class PedidoController {
                                                    @RequestBody @Valid  PedidoDTO pedidoDTO){
         PedidoDTO pedidoDTOresp = pedidoService.actualizarPedido(id, pedidoDTO);
         return new ResponseEntity<>(pedidoDTOresp,HttpStatus.OK);
+    }
+
+    @PutMapping("/upstatus/{id}")
+    public ResponseEntity<PedidoDTO> actualizaEstadoPedido(@PathVariable (name = "id") int id,
+                                                           @RequestParam(name = "estado") EstadoPedido pedido){
+        System.out.println("id = " + id);
+        PedidoDTO pedidoDTO = pedidoService.actualizarEstado(id, pedido);
+        return new ResponseEntity<>(pedidoDTO,HttpStatus.OK);
+
     }
 
 }
