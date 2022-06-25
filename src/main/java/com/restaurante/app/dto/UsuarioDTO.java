@@ -33,7 +33,7 @@ public class UsuarioDTO {
     @NotBlank(message = "Se necesita la clave")
     @NotEmpty
     private String password;
-    @NotNull(message = "Debe ingresar el rol")
+    //@NotNull(message = "Debe ingresar el rol")
     private Rol rol;
 
     public int getIdUsuario() {

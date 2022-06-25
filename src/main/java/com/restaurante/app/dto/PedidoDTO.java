@@ -21,12 +21,12 @@ public class PedidoDTO {
     private int idMesa;
 
     private int idUsuario;
-    @NotNull(message = "El campo fecha es requerido")
+    //@NotNull(message = "El campo fecha es requerido")
     private LocalDate fecha;
-    @NotNull(message = "El campo hora es requerido")
+    //@NotNull(message = "El campo hora es requerido")
     private LocalTime hora;
     @NotNull(message = "El campo estado de pedido es requerido")
     private EstadoPedido estadoPedido;
-    @NotNull(message = "El campo detalle pedido es requerido")
+    //@NotNull(message = "El campo detalle pedido es requerido")
     private Set<DetallePedidoDTO> detallePedidos;
 }

@@ -20,14 +20,12 @@ public class VentaDTO {
     @NotNull(message = "El Pedido es requerido")
     private int idPedido;
     private int idRestaurante;
-    @NotNull(message = "Debe ingresar el tipo de pago")
-    @NotBlank
-    @NotEmpty
+    //@NotNull(message = "Debe ingresar el tipo de pago")
     private TipoPago formaDePago;
-    @NotNull(message = "El campo fecha es requerido")
+    //@NotNull(message = "El campo fecha es requerido")
     private LocalDate fecha;
     @DateTimeFormat(pattern = "HH:mm")
-    @NotNull(message = "El campo hora es requerido")
+    //@NotNull(message = "El campo hora es requerido")
     private LocalTime hora;
     private Calificacion calificacion;
     private BigDecimal impuestos;

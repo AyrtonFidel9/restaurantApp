@@ -105,7 +105,6 @@ public class PedidoService implements iPedidoService{
                     return detallarPedido;
                 }).collect(Collectors.toSet());
         pedido.setDetallePedidos(listDetallePedido);
-
         pedidoRepository.save(pedido);
         return mapper.toPedidoDTO(pedido);
     }
