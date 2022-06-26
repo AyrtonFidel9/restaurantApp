@@ -14,7 +14,8 @@ public class AlimentoDTO {
     private int idMenu;
 
     private byte[] imagen;
-
+    @NotBlank(message = "Se necesita el nombre del alimento")
+    @NotEmpty
     @NotNull(message = "El campo nombre es requerido")
     @Size(min=2, max=25)
     private String nombre;

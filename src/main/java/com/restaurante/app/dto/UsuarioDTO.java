@@ -11,7 +11,7 @@ public class UsuarioDTO {
 
     private int idUsuario;
     @NotNull(message = "El restaurante es requerido")
-    @Min(value=1)
+    //@Min(value=1)
     private int idRestaurante;
     @NotNull(message = "Debe ingresar el nombre del usuario")
     @NotBlank(message = "Se necesita el nombre del usuario")
@@ -33,9 +33,7 @@ public class UsuarioDTO {
     @NotBlank(message = "Se necesita la clave")
     @NotEmpty
     private String password;
-    @NotNull(message = "Debe ingresar el rol")
-    @NotBlank(message = "Se necesita el rol")
-    @NotEmpty
+    //@NotNull(message = "Debe ingresar el rol")
     private Rol rol;
 
     public int getIdUsuario() {
