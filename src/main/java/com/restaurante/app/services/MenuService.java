@@ -63,11 +63,11 @@ public class MenuService implements iMenusService{
     @Override
     public MenuDTO actualizarMenu(int idMenu, MenuDTO menuDTO) {
 
-        Menu menu = mapper.toMenu(buscarMenu(idMenu));
-
-        menu.setTipo(menuDTO.getTipo());
-        menu.setNombre(menuDTO.getNombre());
-
-        return mapper.toMenuDTO(menuRepository.save(menu));
+        if (menuRepository.existsById(idMenu)){
+            menuDTO.setId(idMenu);
+            return ingresarMenu(menuDTO);
+        }else{
+            throw new ResourceNotFoundException("Menu", "id", idMenu);
+        }
     }
 }
