@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.restaurante.app.repository.iUsuarioRepository;
 import com.restaurante.app.repository.iMesaRepository;
 import com.restaurante.app.repository.iReservaMesaRepository;
+import com.restaurante.app.mapper.iReservaMesaMapper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,26 +41,29 @@ public class ReservaService implements iReservaService{
     @Autowired
     private iReservaMapper mapper;
 
+    @Autowired
+    private iReservaMesaMapper reservaMesaMapper;
+
     @Override
     public ReservaDTO ingresarReserva(ReservaDTO reservaDTO) {
         // se obtiene la hora actual
         LocalTime horaActual = LocalTime.now();
 
+        // se obtiene la fecha actual
         //comprobar que la hora de la reserva sea mayor a la actual
 
-        if(reservaDTO.getHora().isBefore(horaActual)){
-            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
-                    "La hora "+reservaDTO.getHora()+" no se encuentra disponible para una reservacion, " +
-                            "no se puede reservar en el pasado");
-        }
-
-        // se obtiene la fecha actual
         LocalDate fechaActual = LocalDate.now();
 
         if(reservaDTO.getFecha().isBefore(fechaActual)){
             throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
                     "La fecha "+reservaDTO.getFecha()+" no se encuentra habilitada para una reservacion," +
                             "elija otra fecha, por favor");
+        }
+        else if(reservaDTO.getHora().isBefore(horaActual) && reservaDTO.getFecha().isEqual(fechaActual)){
+                throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                        "La hora "+reservaDTO.getHora()+" no se encuentra disponible para una reservacion, " +
+                                "no se puede reservar en el pasado");
+
         }
 
         reservaDTO.setIdRestaurante(1);
@@ -69,6 +73,8 @@ public class ReservaService implements iReservaService{
         int idUsu = reservaDTO.getIdUsuario();
 
         Reserva reserva = mapper.toReserva(reservaDTO);
+
+
 
         //buscar y guardar el objeto restaurante
         Restaurante res = restauranteRepository.findById(idRest)
@@ -122,27 +128,14 @@ public class ReservaService implements iReservaService{
 
     @Override
     public ReservaDTO actualizarReserva(int idReserva, ReservaDTO reservaDTO) {
-        Reserva reservaNueva = mapper.toReserva(buscarReserva(idReserva)); // compruebo si existe la reserva
+        buscarReserva(idReserva); // compruebo si existe la reserva
+        reservaDTO.setIdReserva(idReserva);
 
-        reservaNueva.setFecha(reservaDTO.getFecha());
-        reservaNueva.setHora(reservaDTO.getHora());
-        reservaNueva.setDuracion(reservaDTO.getDuracion());
-
-        // se obtiene la hora actual
-        LocalTime horaActual = LocalTime.now();
-
-        if(reservaDTO.getHora().isBefore(horaActual)){
-            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
-                    "La hora "+reservaDTO.getHora()+" no se encuentra disponible para una reservacion, " +
-                            "no se puede reservar en el pasado");
+        if(reservaDTO.getIdReserva() != 0){
+            reservaMesaRepository.deleteReservaMesaByIdReserva(reservaDTO.getIdReserva());
         }
 
-        // se obtiene la fecha actual
-        LocalDate fechaActual = LocalDate.now();
-        reservaNueva.setReservaMesas(createListReservasMesas(reservaNueva, reservaDTO, horaActual,fechaActual ));
-
-
-        return mapper.toReservaDTO(reservaRepository.save(reservaNueva));
+        return ingresarReserva(reservaDTO);
     }
     /*
     * VALIDACIONES
@@ -154,6 +147,7 @@ public class ReservaService implements iReservaService{
 
     @Override
     public Set<ReservaMesa> createListReservasMesas(Reserva reserva, ReservaDTO reservaDTO, LocalTime horaActual, LocalDate fechaActual) {
+
         Set<ReservaMesa> listReservaMesa = Collections.EMPTY_SET;
         listReservaMesa = reservaDTO
                 .getReservaMesas()
@@ -164,38 +158,26 @@ public class ReservaService implements iReservaService{
                             .orElseThrow(() -> new ResourceNotFoundException("Mesa","id",
                                     reservaMesa.getId().getIdMesa()));
 
+                    LocalTime horaFin = reserva.getHora().plusMinutes(
+                            (long) reserva.getDuracion());
 
                     Set<ReservaMesa> setReservas =
-                            reservaMesaRepository.findReservaMesaByFechaAndHoraAfter(fechaActual,horaActual);
-
-                    System.out.println(setReservas.toString());
+                            reservaMesaRepository
+                                    .findReservaMesaByFechaAndHoraBetween(
+                                            reserva.getFecha(),reserva.getHora(), horaFin);
 
                     if(!setReservas.isEmpty()){
-                        setReservas.stream().forEach(item -> {
-                            if(item.getId().getIdMesa() == mesa.getId()){
-                                LocalTime horaInicio = item.getHora();
-                                LocalTime horaFin = item.getHora().plusMinutes(
-                                        (long) reserva.getDuracion());
-
-                                System.out.println(horaInicio+" - "+horaFin);
-
-                                System.out.println((reserva.getHora().isAfter(horaInicio) &&
-                                        reserva.getHora().isBefore(horaFin)));
-
-                                System.out.println(reserva.getHora().equals(horaInicio));
-
-                                if((reserva.getHora().isAfter(horaInicio) &&
-                                        reserva.getHora().isBefore(horaFin) || (
-                                                reserva.getHora().equals(horaInicio)
-                                        ))){
-                                    throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
-                                            "La Mesa "+mesa.getNombre()+
-                                                    " se encuentra reservada entre "
-                                                    +horaInicio+" - "+horaFin);
-                                }
+                        setReservas.stream().forEach(resmes->{
+                            if(resmes.getId().getIdMesa() == mesa.getId()){
+                                throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
+                                        "La Mesa "+mesa.getNombre()+
+                                                " se encuentra reservada entre "
+                                                +reserva.getHora()+" - "+horaFin);
                             }
                         });
+
                     }
+
                     //actualizar el estado de la mesa
                     //mesa.setEstado(true);
                     System.out.println(mesa.toString());

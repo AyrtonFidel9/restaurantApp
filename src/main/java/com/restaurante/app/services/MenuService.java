@@ -1,7 +1,6 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.MenuDTO;
-import com.restaurante.app.dto.MesaDTO;
 import com.restaurante.app.entity.Menu;
 import com.restaurante.app.entity.Restaurante;
 import com.restaurante.app.exceptions.ResourceNotFoundException;

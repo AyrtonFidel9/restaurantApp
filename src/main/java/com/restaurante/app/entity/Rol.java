@@ -6,13 +6,9 @@ public enum Rol {
     cliente,
     administrador,
     cocinero,
-    cajero
-
-     */
+    cajero*/
     ROLE_CLIENTE,
-
     ROLE_COCINERO,
-
     ROLE_CAJERO,
     ROLE_MESERO,
     ROLE_ADMIN

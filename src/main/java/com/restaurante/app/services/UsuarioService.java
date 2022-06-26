@@ -1,7 +1,6 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.UsuarioDTO;
-import com.restaurante.app.entity.Pedido;
 import com.restaurante.app.entity.Restaurante;
 import com.restaurante.app.entity.Rol;
 import com.restaurante.app.entity.Usuario;
