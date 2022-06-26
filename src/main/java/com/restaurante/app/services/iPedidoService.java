@@ -16,5 +16,4 @@ public interface iPedidoService {
 
     PedidoDTO actualizarPedido(int idPedido, PedidoDTO pedidoDTO);
 
-    PedidoDTO actualizarEstado(int idPedido, EstadoPedido estadoPedido);
 }

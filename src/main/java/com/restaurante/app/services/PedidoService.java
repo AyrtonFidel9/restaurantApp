@@ -161,12 +161,4 @@ public class PedidoService implements iPedidoService{
             throw new ResourceNotFoundException("Pedido" , "id", idPedido);
     }
 
-    @Override
-    public PedidoDTO actualizarEstado(int idPedido, EstadoPedido estadoPedido) {
-        if (pedidoRepository.existsById(idPedido)){
-            pedidoRepository.actualizarEstado(idPedido,estadoPedido);
-            return buscarPedido(idPedido);
-        }else
-            throw new ResourceNotFoundException("Pedido", "id", idPedido);
-    }
 }
