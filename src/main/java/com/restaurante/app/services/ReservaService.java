@@ -8,6 +8,7 @@ import com.restaurante.app.repository.iReservaRepository;
 import com.restaurante.app.mapper.iReservaMapper;
 import com.restaurante.app.repository.iRestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.restaurante.app.repository.iUsuarioRepository;
@@ -15,6 +16,7 @@ import com.restaurante.app.repository.iMesaRepository;
 import com.restaurante.app.repository.iReservaMesaRepository;
 import com.restaurante.app.mapper.iReservaMesaMapper;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
@@ -44,14 +46,16 @@ public class ReservaService implements iReservaService{
     @Autowired
     private iReservaMesaMapper reservaMesaMapper;
 
+
     @Override
     public ReservaDTO ingresarReserva(ReservaDTO reservaDTO) {
+
+
         // se obtiene la hora actual
         LocalTime horaActual = LocalTime.now();
 
         // se obtiene la fecha actual
         //comprobar que la hora de la reserva sea mayor a la actual
-
         LocalDate fechaActual = LocalDate.now();
 
         if(reservaDTO.getFecha().isBefore(fechaActual)){
@@ -73,8 +77,6 @@ public class ReservaService implements iReservaService{
         int idUsu = reservaDTO.getIdUsuario();
 
         Reserva reserva = mapper.toReserva(reservaDTO);
-
-
 
         //buscar y guardar el objeto restaurante
         Restaurante res = restauranteRepository.findById(idRest)
@@ -102,13 +104,18 @@ public class ReservaService implements iReservaService{
                             " puede realizar como máximo 2 reservaciones por día");
         }
 
+        if(reservaDTO.getIdReserva() != 0){
+            reservaMesaRepository.deleteReservaMesaByIdReserva(reservaDTO.getIdReserva());
+        }
+
         //Ingresar las mesas que forman parte de la reserva
         reserva.setReservaMesas(
-                createListReservasMesas(reserva, reservaDTO, horaActual,fechaActual));
+                createListReservasMesas(reserva, reservaDTO));
 
         reservaRepository.save(reserva);
         return mapper.toReservaDTO(reserva);
     }
+
 
     @Override
     public void eliminarReserva(int idReserva) {
@@ -126,15 +133,11 @@ public class ReservaService implements iReservaService{
         return mapper.toReservasDTO((List<Reserva>)reservaRepository.findAll());
     }
 
+
     @Override
     public ReservaDTO actualizarReserva(int idReserva, ReservaDTO reservaDTO) {
         buscarReserva(idReserva); // compruebo si existe la reserva
         reservaDTO.setIdReserva(idReserva);
-
-        if(reservaDTO.getIdReserva() != 0){
-            reservaMesaRepository.deleteReservaMesaByIdReserva(reservaDTO.getIdReserva());
-        }
-
         return ingresarReserva(reservaDTO);
     }
     /*
@@ -146,7 +149,7 @@ public class ReservaService implements iReservaService{
     * */
 
     @Override
-    public Set<ReservaMesa> createListReservasMesas(Reserva reserva, ReservaDTO reservaDTO, LocalTime horaActual, LocalDate fechaActual) {
+    public Set<ReservaMesa> createListReservasMesas(Reserva reserva, ReservaDTO reservaDTO){
 
         Set<ReservaMesa> listReservaMesa = Collections.EMPTY_SET;
         listReservaMesa = reservaDTO
@@ -172,7 +175,8 @@ public class ReservaService implements iReservaService{
                                 throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
                                         "La Mesa "+mesa.getNombre()+
                                                 " se encuentra reservada entre "
-                                                +reserva.getHora()+" - "+horaFin);
+                                                +reserva.getHora()+" - "+horaFin +
+                                                " en la fecha "+ reserva.getFecha());
                             }
                         });
 

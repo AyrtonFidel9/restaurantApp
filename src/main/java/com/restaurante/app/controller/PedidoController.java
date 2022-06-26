@@ -1,6 +1,5 @@
 package com.restaurante.app.controller;
 
-import com.restaurante.app.dto.MenuDTO;
 import com.restaurante.app.dto.PedidoDTO;
 import com.restaurante.app.entity.EstadoPedido;
 import com.restaurante.app.exceptions.RestauranteAppException;

@@ -17,7 +17,7 @@ public interface iReservaMesaRepository extends CrudRepository<ReservaMesa, Rese
     ReservaMesa findReservaMesaById_IdReservaAndId_IdMesa(int idReserva, int idMesa);
     //Set<ReservaMesa> findReservaMesaById_IdMesaAndFechaGreaterThanEqualAndHoraGreaterThanEqual(int idMesa, LocalDate fecha, LocalTime hora);
     Set<ReservaMesa> findReservaMesaById_IdReserva(int idReserva);
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query(value = "DELETE FROM reservas_mesas where id_Reserva=:id", nativeQuery = true)
     void deleteReservaMesaByIdReserva(@Param("id") int idReserva );

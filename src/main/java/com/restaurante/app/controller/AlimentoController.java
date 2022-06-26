@@ -1,7 +1,6 @@
 package com.restaurante.app.controller;
 
 import com.restaurante.app.dto.AlimentoDTO;
-import com.restaurante.app.entity.Alimento;
 import com.restaurante.app.services.AlimentosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

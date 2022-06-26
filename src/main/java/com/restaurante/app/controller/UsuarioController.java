@@ -1,8 +1,6 @@
 package com.restaurante.app.controller;
 
-import com.restaurante.app.dto.MesaDTO;
 import com.restaurante.app.dto.UsuarioDTO;
-import com.restaurante.app.entity.Usuario;
 import com.restaurante.app.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
