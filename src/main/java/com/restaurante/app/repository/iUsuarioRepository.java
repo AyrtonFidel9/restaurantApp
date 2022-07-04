@@ -15,4 +15,7 @@ public interface iUsuarioRepository extends CrudRepository<Usuario,Integer> {
 
     public Boolean existsByEmail(String email);
 
+    public Boolean existsByCedulaOrEmail(String cedula, String email);
+
+
 }

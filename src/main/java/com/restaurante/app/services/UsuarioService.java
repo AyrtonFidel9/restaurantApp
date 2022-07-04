@@ -52,7 +52,10 @@ public class UsuarioService implements iUsuarioService{
         Restaurante res = restauranteRepository.findById(idRes).orElseThrow(()->
                 new ResourceNotFoundException("Restaurante","id",idRes));
         usuario.setRestaurante(res);
-
+        if(usuarioRepository.existsByCedulaOrEmail(usuario.getCedula(),usuario.getEmail()))
+        {
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,"Cédula o email repetidos");
+        }
         if(validadorDeCedula(usuario.getCedula())) {
             Usuario ingUsuario = usuarioRepository.save(usuario);
             return mapper.toUsuarioDTO(ingUsuario);
