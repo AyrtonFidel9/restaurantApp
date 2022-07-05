@@ -11,4 +11,5 @@ public interface iUsuarioService {
     UsuarioDTO buscarUsuario(int idUsuario);
     void eliminarUsuario(int idUsuario);
     List<UsuarioDTO> obtenerUsuario();
+    UsuarioDTO buscarNombreOrEmail(String valor);
 }

@@ -143,6 +143,12 @@ public class UsuarioService implements iUsuarioService{
             throw new ResourceNotFoundException("Usuario","id",idUsuario);
         }
     }
+
+    @Override
+    public UsuarioDTO buscarNombreOrEmail(String valor) {
+        return mapper.toUsuarioDTO(usuarioRepository.findByNombreOrEmail(valor, valor).orElseThrow());
+    }
+
     @Override
     public void eliminarUsuario(int idUsuario) {
         usuarioRepository.deleteById(idUsuario);

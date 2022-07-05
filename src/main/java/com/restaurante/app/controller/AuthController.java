@@ -2,6 +2,7 @@ package com.restaurante.app.controller;
 
 import com.restaurante.app.dto.LoginDTO;
 import com.restaurante.app.dto.UsuarioDTO;
+import com.restaurante.app.entity.Rol;
 import com.restaurante.app.repository.iUsuarioRepository;
 import com.restaurante.app.seguridad.JWTAuthResponseDTO;
 import com.restaurante.app.seguridad.JwtTokenProvider;
@@ -46,8 +47,14 @@ public class AuthController {
                 .authenticate(new UsernamePasswordAuthenticationToken
                         (loginDTO.getUsernameorEmail(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        UsuarioDTO usuario = usuarioService.buscarNombreOrEmail(loginDTO.getUsernameorEmail());
+
+        int id = usuario.getIdUsuario();
+        Rol rol = usuario.getRol();
+
         String token = jwtTokenProvider.generarToken(authentication);
-        return ResponseEntity.ok((new JWTAuthResponseDTO(token)));
+        return ResponseEntity.ok((new JWTAuthResponseDTO(token,"Bearer",id,rol)));
     }
 
     @PostMapping("/registrar")
