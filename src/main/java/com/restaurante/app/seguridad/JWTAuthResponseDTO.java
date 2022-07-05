@@ -1,5 +1,6 @@
 package com.restaurante.app.seguridad;
 
+import com.restaurante.app.entity.Rol;
 import lombok.*;
 
 @Data
@@ -10,4 +11,6 @@ public class JWTAuthResponseDTO {
     @NonNull
     private String tokenAcceso;
     private String tipoToken = "Bearer";
+    private int id;
+    private Rol rol;
 }
