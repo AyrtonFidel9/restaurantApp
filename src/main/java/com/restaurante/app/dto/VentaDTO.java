@@ -4,10 +4,7 @@ import com.restaurante.app.entity.TipoPago;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -29,6 +26,7 @@ public class VentaDTO {
     private LocalTime hora;
     private Calificacion calificacion;
     private BigDecimal impuestos;
+    @DecimalMin("0.00")
     private BigDecimal propina;
     private BigDecimal total;
 }
