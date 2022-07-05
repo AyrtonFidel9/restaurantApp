@@ -36,6 +36,8 @@ public class VentaService implements iVentaService {
     @Override
     public VentaDTO ingresarVenta(VentaDTO ventaDTO)
     {
+        if(ventaRepository.existsByPedidoId(ventaDTO.getIdPedido()))
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "El pedido ya ha sido procesado como venta");
         ventaDTO.setIdRestaurante(1);
         ventaDTO.setImpuestos(BigDecimal.valueOf(0.12));
         ventaDTO.setFecha(LocalDate.now());
@@ -69,7 +71,7 @@ public class VentaService implements iVentaService {
         venta.setRestaurante(res);
 
         if(ventaDTO.getHora().isBefore(res.getHoraApertura()) ||
-                ventaDTO.getHora().isAfter(res.getHoraApertura())){
+                ventaDTO.getHora().isAfter(res.getHoraCierre())){
             throw new RestauranteAppException(HttpStatus.BAD_REQUEST,
                     "La hora "+ ventaDTO.getHora() +
                             " esta fuera de las horas laborables del restaurante");
@@ -79,6 +81,8 @@ public class VentaService implements iVentaService {
 
         venta.setTotal(obtenerTotal(ventaDTO));
         Venta igventa = ventaRepository.save(venta);
+        PedidoService pedido_pagado = null;
+
         return mapper.toVentaDTO(igventa);
     }
 
@@ -94,11 +98,11 @@ public class VentaService implements iVentaService {
     {
         if(ventaRepository.existsById(idVenta))
         {
-            ventaDTO.setIdUsuario(idVenta);
+            ventaDTO.setIdVenta(idVenta);
             return ingresarVenta(ventaDTO);
         }
         else{
-            throw new ResourceNotFoundException("Usuario","id",idVenta);
+            throw new ResourceNotFoundException("Venta","id",idVenta);
         }
         /*
         Venta vantigua = ventaRepository.findById(idVenta)

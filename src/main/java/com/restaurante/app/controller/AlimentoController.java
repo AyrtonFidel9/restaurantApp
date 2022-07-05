@@ -37,6 +37,7 @@ public class AlimentoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAlimento(@PathVariable(name = "id") int id){
+        AlimentoDTO alimento = alimentosService.buscarAlimento(id);
         alimentosService.eliminarAlimento(id);
         return new ResponseEntity<>("Alimento con ID:"+id+" eliminado con éxito",HttpStatus.OK);
     }

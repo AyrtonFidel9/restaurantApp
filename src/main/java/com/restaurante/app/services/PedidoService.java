@@ -118,7 +118,7 @@ public class PedidoService implements iPedidoService{
                         //System.out.println(detallePedido.getCantidadAlimento());
 
                         if (detallePedido.getCantidadAlimento() < 1){
-                            throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "La cantidad de alimetos debe ser al menos 1");
+                            throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "La cantidad de alimentos debe ser al menos 1");
                         }
 
                         detallarPedido.setCantidadAlimento(detallePedido.getCantidadAlimento());

@@ -52,16 +52,30 @@ public class UsuarioService implements iUsuarioService{
         Restaurante res = restauranteRepository.findById(idRes).orElseThrow(()->
                 new ResourceNotFoundException("Restaurante","id",idRes));
         usuario.setRestaurante(res);
-        if(usuarioRepository.existsByCedulaOrEmail(usuario.getCedula(),usuario.getEmail()))
-        {
-            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,"Cédula o email repetidos");
+
+
+        if(usuarioDTO.getIdUsuario()==0) {
+            if (usuarioRepository.existsByCedulaOrEmail(usuarioDTO.getCedula(), usuarioDTO.getEmail())) {
+                throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "Cédula o email repetidos");
+            }
         }
+        else
+        {
+            if(usuarioRepository.verificarEmailCedula(usuarioDTO.getIdUsuario(),
+                    usuarioDTO.getEmail(),
+                    usuarioDTO.getCedula())>0)
+            {
+                throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "Cédula o email repetidos");
+            }
+        }
+
+
         if(validadorDeCedula(usuario.getCedula())) {
             Usuario ingUsuario = usuarioRepository.save(usuario);
             return mapper.toUsuarioDTO(ingUsuario);
         }
         else
-            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,"Cedula no valida");
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,"Cédula no válida");
     }
 
     static boolean validadorDeCedula(String cedula) {

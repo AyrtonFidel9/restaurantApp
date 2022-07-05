@@ -12,4 +12,6 @@ public interface iVentaRepository extends CrudRepository<Venta,Integer> {
             "p.id_usuario = a.id group by p.id_usuario, v.fecha order by v.fecha , a.apellido asc",
             nativeQuery = true)
     ArrayList<Object> rpropinas ();
+
+    public Boolean existsByPedidoId(int idPedido);
 }

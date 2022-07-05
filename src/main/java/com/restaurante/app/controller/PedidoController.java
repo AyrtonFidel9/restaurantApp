@@ -39,6 +39,7 @@ public class PedidoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePedido(@PathVariable(name = "id") int id){
+        PedidoDTO pedido = pedidoService.buscarPedido(id);
         pedidoService.eliminarPedido(id);
         return new ResponseEntity<>("Pedido con ID:"+id+" eliminado con éxito",HttpStatus.OK);
     }

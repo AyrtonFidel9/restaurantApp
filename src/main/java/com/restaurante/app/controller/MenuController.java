@@ -31,7 +31,8 @@ public class MenuController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteMenu(@PathVariable(name = "id") int id){
-        menuService.elimiarMenu(id);
+        MenuDTO menu = menuService.buscarMenu(id);
+        menuService.eliminarMenu(id);
         return new ResponseEntity<>("Menu con ID:"+id+" eliminado con éxito",HttpStatus.OK);
     }
 

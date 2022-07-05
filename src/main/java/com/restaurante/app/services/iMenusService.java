@@ -7,7 +7,7 @@ import java.util.List;
 public interface iMenusService {
     MenuDTO ingresarMenu(MenuDTO menuDTO);
 
-    void elimiarMenu(int idMenu);
+    void eliminarMenu(int idMenu);
 
     MenuDTO buscarMenu(int idMenu);
 

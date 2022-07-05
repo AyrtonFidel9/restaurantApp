@@ -45,7 +45,7 @@ public class MenuService implements iMenusService{
     }
 
     @Override
-    public void elimiarMenu(int idMenu) {menuRepository.deleteById(idMenu);}
+    public void eliminarMenu(int idMenu) {menuRepository.deleteById(idMenu);}
 
     @Override
     public MenuDTO buscarMenu(int idMenu) {
