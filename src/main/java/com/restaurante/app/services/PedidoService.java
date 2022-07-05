@@ -144,7 +144,7 @@ public class PedidoService implements iPedidoService{
     @Override
     public PedidoDTO buscarPedido(int idPedido) {
         return mapper.toPedidoDTO(pedidoRepository.findById(idPedido)
-                .orElseThrow(()-> new RuntimeException("Pedido no encontrada")));
+                .orElseThrow(()-> new ResourceNotFoundException("Pedido","id",idPedido)));
     }
 
     @Override
