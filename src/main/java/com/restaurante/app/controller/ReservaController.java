@@ -48,4 +48,9 @@ public class ReservaController {
         return new ResponseEntity<>(reserva,HttpStatus.OK);
     }
 
+    @GetMapping("/usuario/{id}")
+    public List<ReservaDTO> getReservasByUserId(@PathVariable(name = "id") int id){
+        return reservaService.listaReservasByUserId(id);
+    }
+
 }

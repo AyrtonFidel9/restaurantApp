@@ -19,4 +19,6 @@ public interface iReservaService {
     List<ReservaDTO> listarReservas ();
     Set<ReservaMesa> createListReservasMesas (Reserva reserva,ReservaDTO reservaDTO);
 
+    List<ReservaDTO> listaReservasByUserId(int idUser);
+
 }

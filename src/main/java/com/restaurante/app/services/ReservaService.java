@@ -194,4 +194,9 @@ public class ReservaService implements iReservaService{
                 }).collect(Collectors.toSet());
         return listReservaMesa;
     }
+
+    @Override
+    public List<ReservaDTO> listaReservasByUserId(int idUser) {
+        return mapper.toReservasDTO(reservaRepository.findReservaByUsuarioId(idUser));
+    }
 }
