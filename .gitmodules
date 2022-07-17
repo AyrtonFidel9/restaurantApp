@@ -1,0 +1,6 @@
+[submodule "src/main/resources/static/src/main/resources/static/reservaciones-frontend"]
+	path = src/main/resources/static/src/main/resources/static/reservaciones-frontend
+	url = git@github.com:AyrtonFidel9/reservaciones-frontend.git
+[submodule "src/main/resources/static/src/main/resources/static/dashboard"]
+	path = src/main/resources/static/src/main/resources/static/dashboard
+	url = git@github.com:Edwin9927/dashboard.git
