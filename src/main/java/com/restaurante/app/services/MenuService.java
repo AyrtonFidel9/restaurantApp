@@ -1,7 +1,6 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.MenuDTO;
-import com.restaurante.app.dto.MesaDTO;
 import com.restaurante.app.entity.Menu;
 import com.restaurante.app.entity.Restaurante;
 import com.restaurante.app.exceptions.ResourceNotFoundException;
@@ -46,7 +45,7 @@ public class MenuService implements iMenusService{
     }
 
     @Override
-    public void elimiarMenu(int idMenu) {menuRepository.deleteById(idMenu);}
+    public void eliminarMenu(int idMenu) {menuRepository.deleteById(idMenu);}
 
     @Override
     public MenuDTO buscarMenu(int idMenu) {
@@ -64,11 +63,11 @@ public class MenuService implements iMenusService{
     @Override
     public MenuDTO actualizarMenu(int idMenu, MenuDTO menuDTO) {
 
-        Menu menu = mapper.toMenu(buscarMenu(idMenu));
-
-        menu.setTipo(menuDTO.getTipo());
-        menu.setNombre(menuDTO.getNombre());
-
-        return mapper.toMenuDTO(menuRepository.save(menu));
+        if (menuRepository.existsById(idMenu)){
+            menuDTO.setId(idMenu);
+            return ingresarMenu(menuDTO);
+        }else{
+            throw new ResourceNotFoundException("Menu", "id", idMenu);
+        }
     }
 }

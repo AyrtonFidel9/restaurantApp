@@ -39,15 +39,15 @@ public class AlimentosService implements iAlimentoService{
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Menu", "id",alimentoDTO.getIdMenu())
                 );
-        Alimento ingAlimento = alimentoRepository.save(alimento);
-
         if (alimentoDTO.getTipo().toString().length() <2){
-            throw new RestauranteAppException(HttpStatus.NOT_ACCEPTABLE, "La longuitud del nombre de los alimentos debe ser mayor a 2");
+            throw new RestauranteAppException(HttpStatus.NOT_ACCEPTABLE, "La longitud del nombre de los alimentos debe ser mayor a 2");
         }
 
         if (alimentoDTO.getPrecio()<0){
             throw new RestauranteAppException(HttpStatus.BAD_REQUEST ,"El precio no puede ser negativo");
         }
+
+        Alimento ingAlimento = alimentoRepository.save(alimento);
 
         return mapper.toAlimentoDTO(ingAlimento);
     }
@@ -83,9 +83,12 @@ public class AlimentosService implements iAlimentoService{
 
     @Override
     public AlimentoDTO actualizarAlimento(int idAlimento, AlimentoDTO alimentoDTO) {
-        AlimentoDTO alimentoEncontrado = buscarAlimento(idAlimento);
-        alimentoEncontrado = alimentoDTO;
-        return mapper.toAlimentoDTO(alimentoRepository.save(mapper.toAlimento(alimentoEncontrado)));
+        if (alimentoRepository.existsById(idAlimento)){
+            alimentoDTO.setIdAlimento(idAlimento);
+            return ingresarAlimento(alimentoDTO);
+        }else{
+            throw new ResourceNotFoundException("Alimento", "id", idAlimento);
+        }
     }
 
     @Override

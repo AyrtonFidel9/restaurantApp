@@ -1,6 +1,7 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.UsuarioDTO;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
@@ -10,4 +11,5 @@ public interface iUsuarioService {
     UsuarioDTO buscarUsuario(int idUsuario);
     void eliminarUsuario(int idUsuario);
     List<UsuarioDTO> obtenerUsuario();
+    UsuarioDTO buscarNombreOrEmail(String valor);
 }

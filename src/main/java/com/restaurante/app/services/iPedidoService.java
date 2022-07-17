@@ -1,6 +1,7 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.PedidoDTO;
+import com.restaurante.app.entity.EstadoPedido;
 
 import java.util.List;
 
@@ -14,6 +15,5 @@ public interface iPedidoService {
     List<PedidoDTO> obtenerPedido();
 
     PedidoDTO actualizarPedido(int idPedido, PedidoDTO pedidoDTO);
-
 
 }

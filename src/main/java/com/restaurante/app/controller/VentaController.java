@@ -1,7 +1,6 @@
 package com.restaurante.app.controller;
 
 import com.restaurante.app.dto.VentaDTO;
-import com.restaurante.app.entity.Venta;
 import com.restaurante.app.services.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ public class VentaController {
     private VentaService ventaService;
 
     @PostMapping
-    public ResponseEntity<VentaDTO> ingresarVenta(@RequestBody VentaDTO ventaDTO)
+    public ResponseEntity<VentaDTO> ingresarVenta(@RequestBody @Valid VentaDTO ventaDTO)
     {
         return new ResponseEntity<>(ventaService.ingresarVenta(ventaDTO), HttpStatus.CREATED);
     }
@@ -36,7 +35,7 @@ public class VentaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VentaDTO>actualizarVenta(@PathVariable(name = "id") int id, @RequestBody @Valid VentaDTO ventaDTO)
+    public ResponseEntity<VentaDTO>actualizarVenta(@PathVariable(name = "id") int id, @RequestBody @Valid  VentaDTO ventaDTO)
     {
         VentaDTO venta = ventaService.actualizarVenta(id, ventaDTO);
         return new ResponseEntity<>(venta,HttpStatus.OK);

@@ -17,9 +17,9 @@ public class Usuario {
     private String nombre;
 
     private String apellido;
-
+    @Column(unique = true)
     private String cedula;
-
+    @Column(unique = true)
     private String email;
 
     private String password;

@@ -29,7 +29,7 @@ public class Mesa {
     @OneToMany(mappedBy = "mesas",cascade = CascadeType.ALL)
     private Set<Pedido> pedido;
 
-    @OneToMany(mappedBy = "mesas", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "mesas", cascade = CascadeType.PERSIST)
     @JsonIgnore
     private Set<ReservaMesa> reservaMesas;
 

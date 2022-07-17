@@ -1,8 +1,8 @@
 package com.restaurante.app.services;
 
 import com.restaurante.app.dto.UsuarioDTO;
-import com.restaurante.app.entity.Pedido;
 import com.restaurante.app.entity.Restaurante;
+import com.restaurante.app.entity.Rol;
 import com.restaurante.app.entity.Usuario;
 import com.restaurante.app.exceptions.ResourceNotFoundException;
 import com.restaurante.app.exceptions.RestauranteAppException;
@@ -11,10 +11,17 @@ import com.restaurante.app.repository.iRestauranteRepository;
 import com.restaurante.app.repository.iUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UsuarioService implements iUsuarioService{
@@ -28,23 +35,47 @@ public class UsuarioService implements iUsuarioService{
     @Autowired
     private iUsuarioMapper mapper;
 
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+
     @Override
     public UsuarioDTO ingresarUsuario(UsuarioDTO usuarioDTO)
     {
         usuarioDTO.setIdRestaurante(1);
         int idRes = usuarioDTO.getIdRestaurante();
+        usuarioDTO.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
         Usuario usuario = mapper.toUsuario(usuarioDTO);
 
         Restaurante res = restauranteRepository.findById(idRes).orElseThrow(()->
                 new ResourceNotFoundException("Restaurante","id",idRes));
         usuario.setRestaurante(res);
 
+
+        if(usuarioDTO.getIdUsuario()==0) {
+            if (usuarioRepository.existsByCedulaOrEmail(usuarioDTO.getCedula(), usuarioDTO.getEmail())) {
+                throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "Cédula o email repetidos");
+            }
+        }
+        else
+        {
+            if(usuarioRepository.verificarEmailCedula(usuarioDTO.getIdUsuario(),
+                    usuarioDTO.getEmail(),
+                    usuarioDTO.getCedula())>0)
+            {
+                throw new RestauranteAppException(HttpStatus.BAD_REQUEST, "Cédula o email repetidos");
+            }
+        }
+
+
         if(validadorDeCedula(usuario.getCedula())) {
             Usuario ingUsuario = usuarioRepository.save(usuario);
             return mapper.toUsuarioDTO(ingUsuario);
         }
         else
-            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,"Cedula no valida");
+            throw new RestauranteAppException(HttpStatus.BAD_REQUEST,"Cédula no válida");
     }
 
     static boolean validadorDeCedula(String cedula) {
@@ -103,16 +134,21 @@ public class UsuarioService implements iUsuarioService{
     @Override
     public UsuarioDTO actualizarUsuario(int idUsuario,UsuarioDTO usuarioDTO)
     {
-        Usuario usuarioex = mapper.toUsuario(buscarUsuario(idUsuario)); //comprueba si existe el usuario
-        usuarioex.setNombre(usuarioDTO.getNombre());
-        usuarioex.setApellido(usuarioDTO.getApellido());
-        usuarioex.setCedula(usuarioDTO.getCedula());
-        usuarioex.setEmail(usuarioDTO.getEmail());
-        usuarioex.setPassword(usuarioDTO.getPassword());
-        usuarioex.setRol(usuarioDTO.getRol());
-        usuarioRepository.save(usuarioex);
-        return mapper.toUsuarioDTO(usuarioex);
+        if(usuarioRepository.existsById(idUsuario))
+        {
+            usuarioDTO.setIdUsuario(idUsuario);
+            return ingresarUsuario(usuarioDTO);
+        }
+        else{
+            throw new ResourceNotFoundException("Usuario","id",idUsuario);
+        }
     }
+
+    @Override
+    public UsuarioDTO buscarNombreOrEmail(String valor) {
+        return mapper.toUsuarioDTO(usuarioRepository.findByNombreOrEmail(valor, valor).orElseThrow());
+    }
+
     @Override
     public void eliminarUsuario(int idUsuario) {
         usuarioRepository.deleteById(idUsuario);
